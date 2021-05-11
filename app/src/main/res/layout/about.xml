@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background5">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/textname_about"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/y"
+        android:textAlignment="center"
+        android:text="@string/about"
+        android:textSize="@dimen/dimentionIP"
+        tools:ignore="MissingConstraints" />
+
+    <TextView
+        android:id="@+id/textabout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:drawableTop="@color/colorAccent"
+        android:textColor="@color/y"
+        android:textAlignment="center"
+        android:text="@string/about_text"
+       android:textSize="@dimen/dimentionIP"/>
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

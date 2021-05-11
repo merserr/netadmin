@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#6FEC8B3C</color>
+    <color name="colorPrimaryDark">#3700B3</color>
+    <color name="colorAccent">#03DAC5</color>
+    <color name="legacy_icon_background">#3A2323</color>
+    <color name="y">#ffff99</color>
+    <color name="o">#ffff22</color>
+    <color name="r">#ff7700</color>
+    <color name="b">#545eef</color>
+    <color name="g">#b5fa4e</color>
+    <string name="green">#008800</string>
+    <string name="orange">#ffff22</string>
+
+</resources>
