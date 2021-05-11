@@ -37,13 +37,11 @@ import java.util.List;
 public class MainActivity  extends AppCompatActivity implements CompoundButton.OnCheckedChangeListener {
 
 
-
-
     public final static String WIDGET_PREF = "widget_pref";
     public final static String PASSWORD = "password";
     String passwrd;
 
-    public static final String BROADCAST_ACTION = "com.example.herdcontrol";
+    public static final String BROADCAST_ACTION = "com.example.netadmin";
     public final static String MASSAGE = "inputMassage";
     private static final String FILENAME = "herdcontroldata.csv";
     private static final String LOG_TAG ="==MainActivity==" ;
