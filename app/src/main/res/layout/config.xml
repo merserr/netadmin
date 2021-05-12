@@ -9,20 +9,75 @@
     android:background="@drawable/background5"
     android:weightSum="1">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="70dp"
+        android:layout_marginRight="70dp"
+        android:orientation="vertical"
+        >
+
+
     <TextView
-        android:id="@+id/textView1"
+        android:id="@+id/title_1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
         android:textColor="@color/y"
         android:textAlignment="center"
-        android:text="@string/password"
+        android:text="@string/titleipaddress"
         android:textSize="@dimen/dimentionIP"/>
 
 
     <EditText
-        android:id="@+id/text_password"
+        android:id="@+id/et_ipaddress"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="0dp"
+        android:ems="3"
+        android:textAlignment="center"
+        android:textColor="@color/g"
+        android:textSize="@dimen/dimentionIP">
+    </EditText>
+
+    <TextView
+        android:id="@+id/title_2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:textColor="@color/y"
+        android:textAlignment="center"
+        android:text="@string/titleport"
+        android:textSize="@dimen/dimentionIP"/>
+
+
+    <EditText
+        android:id="@+id/et_port"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="0dp"
+        android:ems="3"
+        android:textAlignment="center"
+        android:textColor="@color/g"
+        android:textSize="@dimen/dimentionIP">
+    </EditText>
+
+    <TextView
+        android:id="@+id/title_3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:textColor="@color/y"
+        android:textAlignment="center"
+        android:text="@string/titlepassword"
+        android:textSize="@dimen/dimentionIP"/>
+
+
+    <EditText
+        android:id="@+id/et_password"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="0dp"
         android:ems="3"
         android:textAlignment="center"
         android:textColor="@color/g"
@@ -30,23 +85,18 @@
 
     </EditText>
 
-    <CheckBox
-        android:id="@+id/checkBox2"
-        android:layout_width="300dp"
-        android:layout_height="wrap_content"
-        android:text="  check"
-        android:textColor="@color/y"
-        tools:visibility="visible" />
 
     <Button
         android:id="@+id/button_ok"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:layout_marginTop="20dp"
         android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
         android:onClick="onClick"
         android:textColor="@color/y"
         android:text="@string/ok" >
     </Button>
+    </LinearLayout>
 
 </LinearLayout>

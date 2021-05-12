@@ -15,6 +15,7 @@
         android:id="@+id/textname_about"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
         android:textColor="@color/y"
         android:textAlignment="center"
         android:text="@string/about"
@@ -25,8 +26,9 @@
         android:id="@+id/textabout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
         android:drawableTop="@color/colorAccent"
-        android:textColor="@color/y"
+        android:textColor="@color/g"
         android:textAlignment="center"
         android:text="@string/about_text"
        android:textSize="@dimen/dimentionIP"/>

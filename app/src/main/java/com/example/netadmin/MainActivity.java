@@ -32,14 +32,17 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 
 public class MainActivity  extends AppCompatActivity implements CompoundButton.OnCheckedChangeListener {
 
 
     public final static String WIDGET_PREF = "widget_pref";
+    public final static String IPADDRESS = "ipaddress";
+    public final static String PORT = "port";
     public final static String PASSWORD = "password";
-    String passwrd;
+
 
     public static final String BROADCAST_ACTION = "com.example.netadmin";
     public final static String MASSAGE = "inputMassage";
@@ -50,8 +53,10 @@ public class MainActivity  extends AppCompatActivity implements CompoundButton.O
 
 
     String herddata = "";
-    final String ipaddress = "192.168.1.4";
-    final int port=1688;
+    String passwrd;
+    String ipaddress;
+    String port;
+    int intport=23; // 1688
 
     //Создаем список вьюх которые будут создаваться
     private List<View> allEds;
@@ -80,6 +85,14 @@ public class MainActivity  extends AppCompatActivity implements CompoundButton.O
 
         final SharedPreferences sp = getSharedPreferences(WIDGET_PREF, 0);
         passwrd=sp.getString(MainActivity.PASSWORD, null);
+        ipaddress=sp.getString(MainActivity.IPADDRESS, null);
+        port=sp.getString(MainActivity.PORT, null);
+
+        try {
+            intport = Integer.parseInt(port);
+        } catch(NumberFormatException nfe) {
+
+        }
 
 
         //Toolbar toolbar = findViewById(R.id.toolbar);
@@ -246,7 +259,7 @@ public class MainActivity  extends AppCompatActivity implements CompoundButton.O
         Intent intent = new Intent();
         intent.setClass(MainActivity.this, TCPService.class);
         intent.putExtra("ipaddress", ipaddress);
-        intent.putExtra("port", port);
+        intent.putExtra("port", intport);
         intent.putExtra("command", sending_command);
         Log.d(LOG_TAG, "sending_command: "+sending_command);
         MainActivity.this.startService(intent);
@@ -322,7 +335,7 @@ public class MainActivity  extends AppCompatActivity implements CompoundButton.O
         Intent intent = new Intent();
         intent.setClass(MainActivity.this, TCPService.class);
         intent.putExtra("ipaddress", ipaddress);
-        intent.putExtra("port", port);
+        intent.putExtra("port", intport);
         intent.putExtra("command", sending_command);
         Log.d(LOG_TAG, "sending_command: "+sending_command);
         MainActivity.this.startService(intent);
@@ -362,29 +375,84 @@ public class MainActivity  extends AppCompatActivity implements CompoundButton.O
         return true;
     }
 
+    //------------- menu setting and about ----------------------
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()) {
             case R.id.action_settings:
                 //your action
-                Log.d(LOG_TAG, "===action_settings===");
+                //Log.d(LOG_TAG, "===action_settings===");
                 setContentView(R.layout.config);
-                final EditText edit_text_password = (EditText) findViewById(R.id.text_password);
                 final SharedPreferences sp = getSharedPreferences(WIDGET_PREF, 0);
+
+                final EditText edit_text_ipaddress = (EditText) findViewById(R.id.et_ipaddress);
+                final EditText edit_text_port = (EditText) findViewById(R.id.et_port);
+                final EditText edit_text_password = (EditText) findViewById(R.id.et_password);
+                edit_text_ipaddress.setText(sp.getString(MainActivity.IPADDRESS, null));
+                edit_text_port.setText(sp.getString(MainActivity.PORT, null));
                 edit_text_password.setText(sp.getString(MainActivity.PASSWORD, null));
 
                 Button button_ok = (Button) findViewById(R.id.button_ok);
                 button_ok.setOnClickListener(new View.OnClickListener() {
+
                     @Override
                     public void onClick(View view) {
-
-                        Log.d(LOG_TAG, "save_password");
+                        //Log.d(LOG_TAG, "save_password");
                         SharedPreferences.Editor editor = sp.edit();
-                        editor.putString(PASSWORD, edit_text_password.getText().toString());
+                    //    editor.putString(IPADDRESS, edit_text_ipaddress.getText().toString());
+                    //    editor.putString(PORT, edit_text_port.getText().toString());
+                     //   editor.putString(PASSWORD, edit_text_password.getText().toString());
+
+
+                        ipaddress = edit_text_ipaddress.getText().toString();
+                        port = edit_text_port.getText().toString();
+                        passwrd = edit_text_password.getText().toString();
+
+                        IpAddressValidator validator = new IpAddressValidator();
+                        boolean wrongdata = false;
+                        if(validator.isValid(ipaddress)){
+                            Log.d(LOG_TAG, "======= ipaddress OK ========");
+                        }else{
+                            Log.d(LOG_TAG, "======= ipaddress Wrong! ========");
+                            wrongdata = true;
+                            Toast.makeText(MainActivity.this, "wrong ipaddress!", Toast.LENGTH_SHORT).show();
+                        }
+                        if (port.matches("\\d{1,5}")) {
+                            intport = Integer.parseInt(port);  //65536
+                            if(intport>65536){
+                                intport=65536;
+                                port="65536";
+                                //edit_text_port.setText(port);
+                            }
+                            Log.d(LOG_TAG, "======= port OK ========");
+                        }else{
+                            Toast.makeText(MainActivity.this, "wrong port!", Toast.LENGTH_SHORT).show();
+                            wrongdata = true;
+                            Log.d(LOG_TAG, "======= port Wrong! ========");
+                        }
+                        if (passwrd.matches(".{4,14}")) {
+                            Log.d(LOG_TAG, "======= password OK ========");
+                        }else{
+                            Toast.makeText(MainActivity.this, "password too small or too long!", Toast.LENGTH_SHORT).show();
+                            wrongdata = true;
+                            Log.d(LOG_TAG, "======= password Wrong! ========");
+                        }
+
+                       // try {
+                       //     intport = Integer.parseInt(port);
+                       // } catch(NumberFormatException nfe) { }
+
+                        if(!wrongdata){
+                            editor.putString(IPADDRESS, ipaddress);
+                            editor.putString(PORT, port);
+                            editor.putString(PASSWORD, passwrd);
+
+
+                            Toast.makeText(MainActivity.this, "Saved!", Toast.LENGTH_SHORT).show();}
+
+
                         editor.commit();
-
-
-                    }
+                        }
                 });
                 break;
             case R.id.action_about:
@@ -396,6 +464,20 @@ public class MainActivity  extends AppCompatActivity implements CompoundButton.O
                 return super.onOptionsItemSelected(item);
         }
         return true;
+    }
+
+    public class IpAddressValidator {
+
+        private static final String zeroTo255 = "([01]?[0-9]{1,2}|2[0-4][0-9]|25[0-5])";
+
+        private static final String IP_REGEXP = zeroTo255 + "\\." + zeroTo255 + "\\." + zeroTo255 + "\\." + zeroTo255;
+
+        private final Pattern IP_PATTERN = Pattern.compile(IP_REGEXP);
+
+        // Return true when *address* is IP Address
+        private boolean isValid(String address) {
+            return IP_PATTERN.matcher(address).matches();
+        }
     }
 
 
