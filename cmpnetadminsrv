@@ -1,0 +1,6 @@
+#!/bin/sh
+killall netadminsrv
+
+c++ -D_FIX_FOR_BSD_ -I/usr/local/include/mysql -L/usr/local/lib/mysql -lmysqlclient netadminsrv.cpp -o netadminsrv
+
+./netadminsrv
