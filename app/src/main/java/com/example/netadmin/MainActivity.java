@@ -56,10 +56,11 @@ public class MainActivity  extends AppCompatActivity  {
 
     String herddata = "";
     String passwrd;
-    String ipaddress;
+    String ipaddress_srv;
     String port;
     int intport=23; // 1688
 
+    String ipaddress;
     String macaddress="1122.3344.5566";
     String factory="amx";
     String name="panel";
@@ -96,7 +97,7 @@ public class MainActivity  extends AppCompatActivity  {
 
        final SharedPreferences sp = getSharedPreferences(WIDGET_PREF, 0);
        passwrd = sp.getString(MainActivity.PASSWORD, null);
-       ipaddress = sp.getString(MainActivity.IPADDRESS, null);
+       ipaddress_srv = sp.getString(MainActivity.IPADDRESS, null);
        port = sp.getString(MainActivity.PORT, null);
 
        try {
@@ -268,7 +269,7 @@ public class MainActivity  extends AppCompatActivity  {
      //   ctx0 = (Context) MainActivity.this;
         Intent intent = new Intent();
         intent.setClass(MainActivity.this, TCPService.class);
-        intent.putExtra("ipaddress", ipaddress);
+        intent.putExtra("ipaddress", ipaddress_srv);
         intent.putExtra("port", intport);
         intent.putExtra("command", sending_command);
         Log.d(LOG_TAG, "sending_command: "+sending_command);
@@ -444,13 +445,13 @@ public class MainActivity  extends AppCompatActivity  {
                      //   editor.putString(PASSWORD, edit_text_password.getText().toString());
 
 
-                        ipaddress = edit_text_ipaddress.getText().toString();
+                        ipaddress_srv = edit_text_ipaddress.getText().toString();
                         port = edit_text_port.getText().toString();
                         passwrd = edit_text_password.getText().toString();
 
                         IpAddressValidator validator = new IpAddressValidator();
                         boolean wrongdata = false;
-                        if(validator.isValid(ipaddress)){
+                        if(validator.isValid(ipaddress_srv)){
                             Log.d(LOG_TAG, "======= ipaddress OK ========");
                         }else{
                             Log.d(LOG_TAG, "======= ipaddress Wrong! ========");
@@ -483,7 +484,7 @@ public class MainActivity  extends AppCompatActivity  {
                        // } catch(NumberFormatException nfe) { }
 
                         if(!wrongdata){
-                            editor.putString(IPADDRESS, ipaddress);
+                            editor.putString(IPADDRESS, ipaddress_srv);
                             editor.putString(PORT, port);
                             editor.putString(PASSWORD, passwrd);
 

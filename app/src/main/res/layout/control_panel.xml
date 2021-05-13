@@ -74,7 +74,6 @@
             android:text="@string/titlefactory"
             android:textSize="@dimen/dimentionIP"/>
 
-
         <EditText
             android:id="@+id/editText3"
             android:layout_width="match_parent"
@@ -97,7 +96,6 @@
             android:text="@string/titlename"
             android:textSize="@dimen/dimentionIP"/>
 
-
         <EditText
             android:id="@+id/editText4"
             android:layout_width="match_parent"
@@ -109,7 +107,6 @@
             android:textSize="@dimen/dimentionIP">
 
         </EditText>
-
 
         <Button
             android:id="@+id/button_save"
@@ -144,8 +141,6 @@
             android:text="@string/string_button_off" >
         </Button>
     </LinearLayout>
-
-
 
     <LinearLayout
         android:id="@+id/layout_bottom_bar"
