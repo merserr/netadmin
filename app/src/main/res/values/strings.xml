@@ -19,4 +19,9 @@
     <string name="titleipaddress">IP address:</string>
     <string name="titleport">Port:</string>
     <string name="title_activity_Control_panel">control</string>
+    <string name="titlemacaddress">mac address</string>
+    <string name="titlefactory">factory:</string>
+    <string name="titlename">name</string>
+    <string name="string_button_on">On</string>
+    <string name="string_button_off">off</string>
 </resources>

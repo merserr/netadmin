@@ -3,6 +3,7 @@ package com.example.netadmin;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -36,7 +37,7 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 
-public class MainActivity  extends AppCompatActivity implements CompoundButton.OnCheckedChangeListener {
+public class MainActivity  extends AppCompatActivity  {
 
 
     public final static String WIDGET_PREF = "widget_pref";
@@ -69,80 +70,79 @@ public class MainActivity  extends AppCompatActivity implements CompoundButton.O
     private int counter = 0;
     BroadcastReceiver br;
     private Activity view2;
-    private Context ctx0;
+    Context ctx;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+   @SuppressLint("MissingSuperCall")
+   public void onCreate(Bundle savedInstanceState) {
+       super.onCreate(savedInstanceState);
 
-    //    Context ctx0 = (Context)MainActivity.this;
-
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-
-        //    ============  add logo in toolbar  ===================
-        //    getSupportActionBar().setDisplayShowHomeEnabled(true);
-        //    getSupportActionBar().setLogo(R.mipmap.lutron_control);
-        //    getSupportActionBar().setDisplayUseLogoEnabled(true);
-
-        //    ============  add logo in toolbar (2nd variant) ======
-        ActionBar menu = getSupportActionBar();
-        menu.setDisplayShowHomeEnabled(true);
-        menu.setIcon(R.mipmap.ic_launcher);
+       setContentView(R.layout.activity_main);
+       ctx = (Context)MainActivity.this;
 
 
 
-        final SharedPreferences sp = getSharedPreferences(WIDGET_PREF, 0);
-        passwrd=sp.getString(MainActivity.PASSWORD, null);
-        ipaddress=sp.getString(MainActivity.IPADDRESS, null);
-        port=sp.getString(MainActivity.PORT, null);
+       setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
-        try {
-            intport = Integer.parseInt(port);
-        } catch(NumberFormatException nfe) {
+       //    ============  add logo in toolbar  ===================
+       //    getSupportActionBar().setDisplayShowHomeEnabled(true);
+       //    getSupportActionBar().setLogo(R.mipmap.lutron_control);
+       //    getSupportActionBar().setDisplayUseLogoEnabled(true);
 
-        }
-
-
-        //Toolbar toolbar = findViewById(R.id.toolbar);
-        //toolbar.setLogo(R.mipmap.ic_launcher);        // add logo in toolbar
-        //setSupportActionBar(toolbar);                 // add name & calling menu
+       //    ============  add logo in toolbar (2nd variant) ======
+       ActionBar menu = getSupportActionBar();
+       menu.setDisplayShowHomeEnabled(true);
+       menu.setIcon(R.mipmap.ic_launcher);
 
 
+       final SharedPreferences sp = getSharedPreferences(WIDGET_PREF, 0);
+       passwrd = sp.getString(MainActivity.PASSWORD, null);
+       ipaddress = sp.getString(MainActivity.IPADDRESS, null);
+       port = sp.getString(MainActivity.PORT, null);
 
-        //getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_HOME | ActionBar.DISPLAY_SHOW_TITLE | ActionBar.DISPLAY_HOME_AS_UP | ActionBar.DISPLAY_USE_LOGO);
+       try {
+           intport = Integer.parseInt(port);
+       } catch (NumberFormatException nfe) {
 
+       }
+
+
+       //Toolbar toolbar = findViewById(R.id.toolbar);
+       //toolbar.setLogo(R.mipmap.ic_launcher);        // add logo in toolbar
+       //setSupportActionBar(toolbar);                 // add name & calling menu
+
+
+       //getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_HOME | ActionBar.DISPLAY_SHOW_TITLE | ActionBar.DISPLAY_HOME_AS_UP | ActionBar.DISPLAY_USE_LOGO);
 
 
 //==========================================================================
-        // Receive massage from TCPService and make Toast
-        //==========================================================================
-        // create BroadcastReceiver
+       // Receive massage from TCPService and make Toast
+       //==========================================================================
+       // create BroadcastReceiver
 
-        br = new BroadcastReceiver() {
-            public void onReceive(Context context, Intent intent) {
-                String massage1 = intent.getStringExtra(MASSAGE);
-                //        Log.d(LOG_TAG, "onReceive: massage1 = " + massage1);
-                assert massage1 != null;
-                Processing(massage1);
-            }
-        };
-        // create filter for BroadcastReceiver
-        IntentFilter intFilt = new IntentFilter(BROADCAST_ACTION);
-        // registration (On) BroadcastReceiver
-        registerReceiver(br, intFilt);
-        //==========================================================================
+       br = new BroadcastReceiver() {
+           public void onReceive(Context context, Intent intent) {
+               String massage1 = intent.getStringExtra(MASSAGE);
+               //        Log.d(LOG_TAG, "onReceive: massage1 = " + massage1);
+               assert massage1 != null;
+               Processing(massage1);
+           }
+       };
+       // create filter for BroadcastReceiver
+       IntentFilter intFilt = new IntentFilter(BROADCAST_ACTION);
+       // registration (On) BroadcastReceiver
+       registerReceiver(br, intFilt);
+       //==========================================================================
 
-        Button button_save = (Button) findViewById(R.id.button_save);
-        Button button_read = (Button) findViewById(R.id.button_read);
-        Button button_readSD = (Button) findViewById(R.id.button_read_SD);
-        Button addButton = (Button) findViewById(R.id.button);
-        Button button_read_cisco = (Button) findViewById(R.id.button_read_cisco);
+       Button button_save = (Button) findViewById(R.id.button_save);
+       Button button_read = (Button) findViewById(R.id.button_read);
+       Button button_readSD = (Button) findViewById(R.id.button_read_SD);
+       Button addButton = (Button) findViewById(R.id.button);
+       Button button_read_cisco = (Button) findViewById(R.id.button_read_cisco);
 
-        //инициализировали наш массив с edittext.aьи
-        allEds = new ArrayList<View>();
+       //инициализировали наш массив с edittext.aьи
+       allEds = new ArrayList<View>();
 
-        //находим наш linear который у нас под кнопкой add edittext в activity_main.xml
+       //находим наш linear который у нас под кнопкой add edittext в activity_main.xml
 
 
         /*
@@ -154,35 +154,35 @@ public class MainActivity  extends AppCompatActivity implements CompoundButton.O
         });
 */
 
-        button_save.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                writeFile();
-            }
-        });
+       button_save.setOnClickListener(new View.OnClickListener() {
+           @Override
+           public void onClick(View view) {
+               writeFile();
+           }
+       });
 
-        button_readSD.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                readFileSD();
-            }
-        });
+       button_readSD.setOnClickListener(new View.OnClickListener() {
+           @Override
+           public void onClick(View view) {
+               readFileSD();
+           }
+       });
 
-        button_read.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                readFile();
-            }
-        });
+       button_read.setOnClickListener(new View.OnClickListener() {
+           @Override
+           public void onClick(View view) {
+               readFile();
+           }
+       });
 
-        button_read_cisco.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                get_data_from_server();
-            }
-        });
+       button_read_cisco.setOnClickListener(new View.OnClickListener() {
+           @Override
+           public void onClick(View view) {
+               get_data_from_server();
+           }
+       });
 
-    }
+   }
 
 
 
@@ -265,6 +265,7 @@ public class MainActivity  extends AppCompatActivity implements CompoundButton.O
         //String sending_command = command + macaddresfromtextview;
         String sending_command = "info";
 
+     //   ctx0 = (Context) MainActivity.this;
         Intent intent = new Intent();
         intent.setClass(MainActivity.this, TCPService.class);
         intent.putExtra("ipaddress", ipaddress);
@@ -330,19 +331,33 @@ public class MainActivity  extends AppCompatActivity implements CompoundButton.O
         registerForContextMenu(buttongo);
 
 
+
         buttongo.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
 
-                Log.d(LOG_TAG, "onLongClick: ");
-                initialise_control_panel();
+             //   Log.d(LOG_TAG, "onLongClick: ");
 
-                
+                ipaddress = ((TextView)view.findViewWithTag("id1")).getText().toString();
+                macaddress = ((TextView)view.findViewWithTag("id2")).getText().toString();
+                factory = ((TextView)view.findViewWithTag("id4")).getText().toString();
+                name = ((TextView)view.findViewWithTag("id5")).getText().toString();
 
 
-                // this code below for get text from textview:
-                //String sending_command = ((TextView)view.findViewWithTag("id1")).getText().toString();
-                //Log.d(LOG_TAG, "===== if setOnLongClickListener =====: "+sending_command);
+                Log.d(LOG_TAG, "===== ipaddress ====== : "+ipaddress);
+                Log.d(LOG_TAG, "===== macaddress ===== : "+macaddress);
+                Log.d(LOG_TAG, "===== factory ======== : "+factory);
+                Log.d(LOG_TAG, "===== name =========== : "+name);
+
+                Intent intent = new Intent();
+                intent.putExtra("ipaddress", ipaddress);
+                intent.putExtra("macaddress", macaddress);
+                intent.putExtra("factory", factory);
+                intent.putExtra("name", name);
+                intent.setClass(ctx, Control_panel.class);
+                startActivity(intent);
+
+
                 return false;
             }
         });
@@ -361,40 +376,11 @@ public class MainActivity  extends AppCompatActivity implements CompoundButton.O
         //TextView text = (TextView) view2.findViewById(R.id.editText);
         //text.setText(textfield[0]);
            //text.setText("192.168.100.222");
-        Log.d(LOG_TAG, "===== ipaddress ===== : "+ipaddress);
-        Log.d(LOG_TAG, "===== macaddress ===== : "+macaddress);
-        Log.d(LOG_TAG, "===== factory ===== : "+factory);
-        Log.d(LOG_TAG, "===== name ===== : "+name);
 
-        Intent intent = new Intent();
-        intent.putExtra("ipaddress", ipaddress);
-        intent.putExtra("macaddress", macaddress);
-        intent.putExtra("factory", factory);
-        intent.putExtra("name", name);
-        intent.setClass(ctx0, Control_panel.class);
-        startActivity(intent);
 
 
     }
 
-    @Override
-    public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-        //Toast.makeText(this, "Отслеживание переключения: " + (isChecked ? "on" : "off"), Toast.LENGTH_SHORT).show();
-
-        String macaddresfromtextview = ((TextView)((View)(compoundButton.getParent())).findViewWithTag("id1")).getText().toString();
-        //Log.d(LOG_TAG, "======== if onCheckedChanged  =======: "+macaddresfromtextview);
-        String command = isChecked ? "ON :" : "OFF:";
-        String sending_command = command + macaddresfromtextview;
-
-        Intent intent = new Intent();
-        intent.setClass(MainActivity.this, TCPService.class);
-        intent.putExtra("ipaddress", ipaddress);
-        intent.putExtra("port", intport);
-        intent.putExtra("command", sending_command);
-        Log.d(LOG_TAG, "sending_command: "+sending_command);
-        MainActivity.this.startService(intent);
-
-    }
 
     void Processing(String inputMassage){
     //    Toast.makeText(MainActivity.this, inputMassage, Toast.LENGTH_LONG).show();

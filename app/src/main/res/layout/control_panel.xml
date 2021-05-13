@@ -8,63 +8,142 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
+    android:background="@drawable/background5"
     tools:context=".MainActivity">
 
-    <TextView
-        android:layout_width="140dp"
-        android:layout_height="wrap_content"
-        android:id="@+id/editText"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:textSize="18dp"
-        android:text="ipaddress" />
 
-    <TextView
-        android:layout_width="140dp"
-        android:layout_height="wrap_content"
-        android:id="@+id/editText2"
-        android:tag="id2"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_marginRight="10dp"
-        android:layout_marginTop="30dp"
-        android:textSize="18dp"
-        android:text="macaddress" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="70dp"
+        android:layout_marginRight="70dp"
+        android:orientation="vertical">
 
-    <Button
-        android:id="@+id/button_go"
-        android:layout_width="60dp"
-        android:layout_height="50dp"
-        android:tag="id3"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_marginLeft="145dp"
-        android:layout_marginTop="3dp"
-        android:textSize="18dp"
-        android:text="-" />
-    <TextView
-        android:layout_width="160dp"
-        android:layout_height="wrap_content"
-        android:id="@+id/editText4"
-        android:tag="id4"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginRight="0dp"
-        android:textSize="18dp"
-        android:text="manufactur" />
-    <TextView
-        android:layout_width="160dp"
-        android:layout_height="wrap_content"
-        android:id="@+id/editText5"
-        android:tag="id5"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginTop="30dp"
-        android:layout_marginRight="0dp"
-        android:textSize="18dp"
-        android:text="name" />
 
+        <TextView
+            android:id="@+id/title_ipaddress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:textColor="@color/y"
+            android:textAlignment="center"
+            android:text="@string/titleipaddress"
+            android:textSize="@dimen/dimentionIP"/>
+
+
+        <EditText
+            android:id="@+id/editText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="0dp"
+            android:ems="3"
+            android:textAlignment="center"
+            android:textColor="@color/g"
+            android:textSize="@dimen/dimentionIP">
+        </EditText>
+
+        <TextView
+            android:id="@+id/title_macaddress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:textColor="@color/y"
+            android:textAlignment="center"
+            android:text="@string/titlemacaddress"
+            android:textSize="@dimen/dimentionIP"/>
+
+
+        <EditText
+            android:id="@+id/editText2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="0dp"
+            android:ems="3"
+            android:textAlignment="center"
+            android:textColor="@color/g"
+            android:textSize="@dimen/dimentionIP">
+        </EditText>
+
+        <TextView
+            android:id="@+id/title_factory"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:textColor="@color/y"
+            android:textAlignment="center"
+            android:text="@string/titlefactory"
+            android:textSize="@dimen/dimentionIP"/>
+
+
+        <EditText
+            android:id="@+id/editText3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="0dp"
+            android:ems="3"
+            android:textAlignment="center"
+            android:textColor="@color/g"
+            android:textSize="@dimen/dimentionIP">
+
+        </EditText>
+
+        <TextView
+            android:id="@+id/title_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:textColor="@color/y"
+            android:textAlignment="center"
+            android:text="@string/titlename"
+            android:textSize="@dimen/dimentionIP"/>
+
+
+        <EditText
+            android:id="@+id/editText4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="0dp"
+            android:ems="3"
+            android:textAlignment="center"
+            android:textColor="@color/g"
+            android:textSize="@dimen/dimentionIP">
+
+        </EditText>
+
+
+        <Button
+            android:id="@+id/button_save"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="40dp"
+            android:layout_marginRight="40dp"
+            android:textColor="@color/y"
+            android:text="@string/ok" >
+        </Button>
+
+        <Button
+            android:id="@+id/button_on"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="40dp"
+            android:layout_marginRight="40dp"
+            android:textColor="@color/y"
+            android:text="@string/string_button_on" >
+        </Button>
+
+        <Button
+            android:id="@+id/button_off"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="40dp"
+            android:layout_marginRight="40dp"
+            android:textColor="@color/y"
+            android:text="@string/string_button_off" >
+        </Button>
+    </LinearLayout>
 
 
 

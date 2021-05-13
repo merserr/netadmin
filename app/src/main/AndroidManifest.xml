@@ -22,7 +22,7 @@
         </activity>
         <service android:name="TCPService"></service>
         <activity
-            android:name="Control_panel"
+            android:name=".Control_panel"
             android:label="@string/title_activity_Control_panel"></activity>
     </application>
 
