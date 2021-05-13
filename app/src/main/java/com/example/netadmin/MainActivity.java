@@ -3,6 +3,7 @@ package com.example.netadmin;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -58,16 +59,24 @@ public class MainActivity  extends AppCompatActivity implements CompoundButton.O
     String port;
     int intport=23; // 1688
 
+    String macaddress="1122.3344.5566";
+    String factory="amx";
+    String name="panel";
+
     //Создаем список вьюх которые будут создаваться
     private List<View> allEds;
     //счетчик чисто декоративный для визуального отображения edittext'ov
     private int counter = 0;
     BroadcastReceiver br;
+    private Activity view2;
+    private Context ctx0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+    //    Context ctx0 = (Context)MainActivity.this;
 
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
@@ -301,8 +310,8 @@ public class MainActivity  extends AppCompatActivity implements CompoundButton.O
      //   text2.setText("1122.3344.5566");
 
 
-        TextView text3 = (TextView) view.findViewById(R.id.editText3);
-        text3.setText(textfield[2]);
+//        TextView text3 = (TextView) view.findViewById(R.id.editText3);
+//        text3.setText(textfield[2]);
      //   text3.setText("111");
 
 
@@ -315,12 +324,57 @@ public class MainActivity  extends AppCompatActivity implements CompoundButton.O
         text5.setText(textfield[4]);
      //   text5.setText("name-name");
 
+        Button buttongo = (Button) view.findViewById(R.id.button_go);
+        buttongo.setText(textfield[2]);
+
+        registerForContextMenu(buttongo);
+
+
+        buttongo.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+
+                Log.d(LOG_TAG, "onLongClick: ");
+                initialise_control_panel();
+
+                
+
+
+                // this code below for get text from textview:
+                //String sending_command = ((TextView)view.findViewWithTag("id1")).getText().toString();
+                //Log.d(LOG_TAG, "===== if setOnLongClickListener =====: "+sending_command);
+                return false;
+            }
+        });
+
+
 
 
         //добавляем все что создаем в массив
         allEds.add(view);
         //добавляем елементы в linearlayout
         linear.addView(view);
+    }
+
+    private void initialise_control_panel() {
+
+        //TextView text = (TextView) view2.findViewById(R.id.editText);
+        //text.setText(textfield[0]);
+           //text.setText("192.168.100.222");
+        Log.d(LOG_TAG, "===== ipaddress ===== : "+ipaddress);
+        Log.d(LOG_TAG, "===== macaddress ===== : "+macaddress);
+        Log.d(LOG_TAG, "===== factory ===== : "+factory);
+        Log.d(LOG_TAG, "===== name ===== : "+name);
+
+        Intent intent = new Intent();
+        intent.putExtra("ipaddress", ipaddress);
+        intent.putExtra("macaddress", macaddress);
+        intent.putExtra("factory", factory);
+        intent.putExtra("name", name);
+        intent.setClass(ctx0, Control_panel.class);
+        startActivity(intent);
+
+
     }
 
     @Override
