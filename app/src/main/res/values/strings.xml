@@ -16,12 +16,12 @@
     <string name="about">About programm</string>
     <string name="about_text">this program display arp data from server which get arp-table from Cisco router, append manufacturer and customer names from database</string>
     <string name="ipaddress">192.168.1.4</string>
-    <string name="titleipaddress">IP address:</string>
+    <string name="titleipaddress">ip address:</string>
     <string name="titleport">Port:</string>
     <string name="title_activity_Control_panel">control</string>
-    <string name="titlemacaddress">mac address</string>
+    <string name="titlemacaddress">mac address:</string>
     <string name="titlefactory">factory:</string>
-    <string name="titlename">name</string>
+    <string name="titlename">name:</string>
     <string name="string_button_on">On</string>
     <string name="string_button_off">off</string>
 </resources>
