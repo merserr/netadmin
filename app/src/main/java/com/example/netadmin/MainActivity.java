@@ -57,8 +57,8 @@ public class MainActivity  extends AppCompatActivity  {
     String herddata = "";
     String passwrd;
     String ipaddress_srv;
-    String port;
-    int intport=23; // 1688
+    String port_srv;
+    int intport_srv=23; // 1688
 
     String ipaddress;
     String macaddress="1122.3344.5566";
@@ -98,10 +98,10 @@ public class MainActivity  extends AppCompatActivity  {
        final SharedPreferences sp = getSharedPreferences(WIDGET_PREF, 0);
        passwrd = sp.getString(MainActivity.PASSWORD, null);
        ipaddress_srv = sp.getString(MainActivity.IPADDRESS, null);
-       port = sp.getString(MainActivity.PORT, null);
+       port_srv = sp.getString(MainActivity.PORT, null);
 
        try {
-           intport = Integer.parseInt(port);
+           intport_srv = Integer.parseInt(port_srv);
        } catch (NumberFormatException nfe) {
 
        }
@@ -270,12 +270,10 @@ public class MainActivity  extends AppCompatActivity  {
         Intent intent = new Intent();
         intent.setClass(MainActivity.this, TCPService.class);
         intent.putExtra("ipaddress", ipaddress_srv);
-        intent.putExtra("port", intport);
+        intent.putExtra("port", intport_srv);
         intent.putExtra("command", sending_command);
         Log.d(LOG_TAG, "sending_command: "+sending_command);
         MainActivity.this.startService(intent);
-
-
     }
 
     String[] parseline(String str){
@@ -329,7 +327,7 @@ public class MainActivity  extends AppCompatActivity  {
         Button buttongo = (Button) view.findViewById(R.id.button_go);
         buttongo.setText(textfield[2]);
 
-        registerForContextMenu(buttongo);
+     //   registerForContextMenu(buttongo);
 
 
 
@@ -351,14 +349,15 @@ public class MainActivity  extends AppCompatActivity  {
                 Log.d(LOG_TAG, "===== name =========== : "+name);
 
                 Intent intent = new Intent();
+                intent.putExtra("ipaddress_srv", ipaddress_srv);
+                intent.putExtra("port_srv", port_srv);
+                intent.putExtra("password", passwrd);
                 intent.putExtra("ipaddress", ipaddress);
                 intent.putExtra("macaddress", macaddress);
                 intent.putExtra("factory", factory);
                 intent.putExtra("name", name);
                 intent.setClass(ctx, Control_panel.class);
                 startActivity(intent);
-
-
                 return false;
             }
         });
@@ -446,7 +445,7 @@ public class MainActivity  extends AppCompatActivity  {
 
 
                         ipaddress_srv = edit_text_ipaddress.getText().toString();
-                        port = edit_text_port.getText().toString();
+                        port_srv = edit_text_port.getText().toString();
                         passwrd = edit_text_password.getText().toString();
 
                         IpAddressValidator validator = new IpAddressValidator();
@@ -458,11 +457,11 @@ public class MainActivity  extends AppCompatActivity  {
                             wrongdata = true;
                             Toast.makeText(MainActivity.this, "wrong ipaddress!", Toast.LENGTH_SHORT).show();
                         }
-                        if (port.matches("\\d{1,5}")) {
-                            intport = Integer.parseInt(port);  //65536
-                            if(intport>65536){
-                                intport=65536;
-                                port="65536";
+                        if (port_srv.matches("\\d{1,5}")) {
+                            intport_srv = Integer.parseInt(port_srv);  //65536
+                            if(intport_srv>65536){
+                                intport_srv=65536;
+                                port_srv="65536";
                                 //edit_text_port.setText(port);
                             }
                             Log.d(LOG_TAG, "======= port OK ========");
@@ -485,7 +484,7 @@ public class MainActivity  extends AppCompatActivity  {
 
                         if(!wrongdata){
                             editor.putString(IPADDRESS, ipaddress_srv);
-                            editor.putString(PORT, port);
+                            editor.putString(PORT, port_srv);
                             editor.putString(PASSWORD, passwrd);
 
 

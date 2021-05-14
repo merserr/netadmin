@@ -59,7 +59,8 @@ public class TCPService extends Service {
             //Log.d(LOG_TAG, "command: "+command);
             // ---------- Проверка данных -------------
             //    KBP, [2:4:22], 2
-            if (command.matches("O[NF].:[0-9A-Fa-f]{2}[-:][0-9A-Fa-f]{2}[-:][0-9A-Fa-f]{2}[-:][0-9A-Fa-f]{2}[-:][0-9A-Fa-f]{2}[-:][0-9A-Fa-f]{2}.*")) {
+            // if (command.matches("O[NF].:[0-9A-Fa-f]{2}[-:][0-9A-Fa-f]{2}[-:][0-9A-Fa-f]{2}[-:][0-9A-Fa-f]{2}[-:][0-9A-Fa-f]{2}[-:][0-9A-Fa-f]{2}.*")) {
+            if (command.matches("save.*")) {
                 sendstring = "\r\n"+command+"\r\n";
             }else{
                 sendstring="\r\ninfo\r\n";
@@ -73,7 +74,7 @@ public class TCPService extends Service {
 
             Log.d(LOG_TAG, "doInBackground sendstring: "+sendstring);
 
-            //Log.d(LOG_TAG, "sending comand to address "+ipaddress+" port "+port);
+            Log.d(LOG_TAG, "sending comand to address "+ipaddress+" port "+port);
 
             //sendstring="\r\ninfo\r\n";
 

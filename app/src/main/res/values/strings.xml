@@ -24,4 +24,6 @@
     <string name="titlename">name:</string>
     <string name="string_button_on">On</string>
     <string name="string_button_off">off</string>
+    <string name="string_button_low">low</string>
+    <string name="string_button_medium">medium</string>
 </resources>

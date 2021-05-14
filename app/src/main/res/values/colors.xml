@@ -9,6 +9,8 @@
     <color name="r">#ff7700</color>
     <color name="b">#545eef</color>
     <color name="g">#b5fa4e</color>
+    <color name="title">#C8E6C9</color>
+    <color name="edit_text">#FDFDFC</color>
     <string name="green">#008800</string>
     <string name="orange">#ffff22</string>
 

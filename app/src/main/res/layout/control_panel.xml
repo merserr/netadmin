@@ -8,7 +8,7 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
-    android:background="@drawable/background5"
+
     tools:context=".MainActivity">
 
 
@@ -25,7 +25,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:textColor="@color/y"
+            android:textColor="@color/title"
             android:textAlignment="center"
             android:text="@string/titleipaddress"
             android:textSize="@dimen/dimentionIP"/>
@@ -38,7 +38,7 @@
             android:layout_marginTop="0dp"
             android:ems="3"
             android:textAlignment="center"
-            android:textColor="@color/g"
+            android:textColor="@color/edit_text"
             android:textSize="@dimen/dimentionIP">
         </EditText>
 
@@ -47,7 +47,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:textColor="@color/y"
+            android:textColor="@color/title"
             android:textAlignment="center"
             android:text="@string/titlemacaddress"
             android:textSize="@dimen/dimentionIP"/>
@@ -60,7 +60,7 @@
             android:layout_marginTop="0dp"
             android:ems="3"
             android:textAlignment="center"
-            android:textColor="@color/g"
+            android:textColor="@color/edit_text"
             android:textSize="@dimen/dimentionIP">
         </EditText>
 
@@ -69,7 +69,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:textColor="@color/y"
+            android:textColor="@color/title"
             android:textAlignment="center"
             android:text="@string/titlefactory"
             android:textSize="@dimen/dimentionIP"/>
@@ -81,7 +81,7 @@
             android:layout_marginTop="0dp"
             android:ems="3"
             android:textAlignment="center"
-            android:textColor="@color/g"
+            android:textColor="@color/edit_text"
             android:textSize="@dimen/dimentionIP">
 
         </EditText>
@@ -91,7 +91,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:textColor="@color/y"
+            android:textColor="@color/title"
             android:textAlignment="center"
             android:text="@string/titlename"
             android:textSize="@dimen/dimentionIP"/>
@@ -103,7 +103,7 @@
             android:layout_marginTop="0dp"
             android:ems="3"
             android:textAlignment="center"
-            android:textColor="@color/g"
+            android:textColor="@color/edit_text"
             android:textSize="@dimen/dimentionIP">
 
         </EditText>
@@ -111,57 +111,58 @@
         <Button
             android:id="@+id/button_save"
             android:layout_width="match_parent"
-            android:layout_height="70dp"
+            android:layout_height="60dp"
             android:layout_marginTop="20dp"
             android:layout_marginLeft="40dp"
             android:layout_marginRight="40dp"
-            android:textColor="@color/y"
+            android:textColor="@color/title"
             android:text="@string/ok" >
         </Button>
 
         <Button
             android:id="@+id/button_on"
             android:layout_width="match_parent"
-            android:layout_height="70dp"
+            android:layout_height="60dp"
             android:layout_marginTop="5dp"
             android:layout_marginLeft="40dp"
             android:layout_marginRight="40dp"
-            android:textColor="@color/y"
+            android:textColor="@color/title"
+
             android:text="@string/string_button_on" >
+        </Button>
+
+        <Button
+            android:id="@+id/button_medium"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="40dp"
+            android:layout_marginRight="40dp"
+            android:textColor="@color/title"
+            android:text="@string/string_button_medium" >
+        </Button>
+
+        <Button
+            android:id="@+id/button_low"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="40dp"
+            android:layout_marginRight="40dp"
+            android:textColor="@color/title"
+            android:text="@string/string_button_low" >
         </Button>
 
         <Button
             android:id="@+id/button_off"
             android:layout_width="match_parent"
-            android:layout_height="70dp"
+            android:layout_height="60dp"
             android:layout_marginTop="5dp"
             android:layout_marginLeft="40dp"
             android:layout_marginRight="40dp"
-            android:textColor="@color/y"
+            android:textColor="@color/title"
             android:text="@string/string_button_off" >
         </Button>
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/layout_bottom_bar"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:background="#222222"
-        android:clickable="true"
-        android:gravity="center"
-        android:orientation="horizontal"
-        android:padding="10dip" >
-
-        <Button
-            android:id="@+id/button_read_cisco"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Read Ci"
-            app:layout_constraintStart_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent" />
-        />
-
     </LinearLayout>
 
 </RelativeLayout>
