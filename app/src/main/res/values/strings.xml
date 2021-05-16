@@ -26,4 +26,9 @@
     <string name="string_button_off">off</string>
     <string name="string_button_low">low</string>
     <string name="string_button_medium">medium</string>
+    <string name="button_save">Save</string>
+    <string name="button_on">On</string>
+    <string name="button_off">Off</string>
+    <string name="button_full">Full</string>
+    <string name="button_low">Low</string>
 </resources>

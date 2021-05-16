@@ -45,7 +45,7 @@ public class Control_panel extends Activity{
         try {
             intport_srv = Integer.parseInt(port_srv);
         } catch (NumberFormatException nfe) {
-
+            nfe.printStackTrace();
         }
 
         setContentView(R.layout.control_panel);
@@ -65,7 +65,7 @@ public class Control_panel extends Activity{
         text4.setText(name);
 
         Button button_save = (Button) findViewById(R.id.button_save);
-        button_save.setText("Save");
+        button_save.setText(R.string.button_save);
         button_save.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -97,7 +97,7 @@ public class Control_panel extends Activity{
         });
 
         Button button_on = (Button) findViewById(R.id.button_on);
-        button_on.setText("On");
+        button_on.setText(R.string.button_on);
         button_on.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -113,7 +113,7 @@ public class Control_panel extends Activity{
         });
 
         Button button_off = (Button) findViewById(R.id.button_off);
-        button_off.setText("Off");
+        button_off.setText(R.string.button_off);
         button_off.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -129,7 +129,7 @@ public class Control_panel extends Activity{
         });
 
         Button button_full = (Button) findViewById(R.id.button_full);
-        button_full.setText("Full");
+        button_full.setText(R.string.button_full);
         button_full.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -145,7 +145,7 @@ public class Control_panel extends Activity{
         });
 
         Button button_low = (Button) findViewById(R.id.button_low);
-        button_low.setText("Low");
+        button_low.setText(R.string.button_low);
         button_low.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -183,7 +183,7 @@ public class Control_panel extends Activity{
         Control_panel.this.startService(intent);
     }
 
-    public class MacAddressValidator {
+    public static class MacAddressValidator {
 
         private static final String fourhexdigit = "([0-9A-Fa-f]{4})";
 
@@ -198,7 +198,7 @@ public class Control_panel extends Activity{
     }
 
 
-    public class IpAddressValidator {
+    public static class IpAddressValidator {
 
         private static final String zeroTo255 = "([01]?[0-9]{1,2}|2[0-4][0-9]|25[0-5])";
 
