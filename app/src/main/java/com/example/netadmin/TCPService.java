@@ -56,15 +56,18 @@ public class TCPService extends Service {
             // TODO Auto-generated constructor stub
             ipaddress = ipaddress_in;
             port=port_in;
+            sendstring = "\r\n"+command+"\r\n";
+
             //Log.d(LOG_TAG, "command: "+command);
             // ---------- Проверка данных -------------
             //    KBP, [2:4:22], 2
             // if (command.matches("O[NF].:[0-9A-Fa-f]{2}[-:][0-9A-Fa-f]{2}[-:][0-9A-Fa-f]{2}[-:][0-9A-Fa-f]{2}[-:][0-9A-Fa-f]{2}[-:][0-9A-Fa-f]{2}.*")) {
-            if (command.matches("save.*")) {
-                sendstring = "\r\n"+command+"\r\n";
-            }else{
-                sendstring="\r\ninfo\r\n";
-            }
+          //  if (command.matches("save.*")) {
+          //      sendstring = "\r\n"+command+"\r\n";
+          //  }else{
+          //      sendstring="\r\ninfo\r\n";
+          //  }
+
             Log.d(LOG_TAG, "sendstring: "+sendstring);
 
         }
