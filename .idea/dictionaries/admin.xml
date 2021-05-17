@@ -2,8 +2,11 @@
   <dictionary name="admin">
     <words>
       <w>intport</w>
+      <w>ipaddressa</w>
+      <w>ipaddressb</w>
       <w>ipvalidator</w>
       <w>macvalidator</w>
+      <w>netchoice</w>
     </words>
   </dictionary>
 </component>

@@ -30,7 +30,7 @@
 
 
     <EditText
-        android:id="@+id/et_ipaddress"
+        android:id="@+id/et_ipaddress1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="0dp"
@@ -39,6 +39,16 @@
         android:textColor="@color/g"
         android:textSize="@dimen/dimentionIP">
     </EditText>
+        <EditText
+            android:id="@+id/et_ipaddress2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="0dp"
+            android:ems="3"
+            android:textAlignment="center"
+            android:textColor="@color/g"
+            android:textSize="@dimen/dimentionIP">
+        </EditText>
 
     <TextView
         android:id="@+id/title_2"

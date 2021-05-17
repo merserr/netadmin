@@ -13,6 +13,7 @@ import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Vibrator;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -40,7 +41,9 @@ public class MainActivity  extends AppCompatActivity  {
 
 
     public final static String WIDGET_PREF = "widget_pref";
-    public final static String IPADDRESS = "ipaddress";
+    public final static String IPADDRESSA = "ipaddress1";
+    public final static String IPADDRESSB = "ipaddress2";
+    public final static String NETCHOICE = "false";
     public final static String PORT = "port";
     public final static String PASSWORD = "password";
 
@@ -56,6 +59,10 @@ public class MainActivity  extends AppCompatActivity  {
     String herddata = "";
     String passwrd;
     String ipaddress_srv;
+    String ipaddress_srv1;
+    String ipaddress_srv2;
+    String value;
+    String netchoice;
     String port_srv;
     int intport_srv=23; // 1688
 
@@ -96,8 +103,18 @@ public class MainActivity  extends AppCompatActivity  {
 
        final SharedPreferences sp = getSharedPreferences(WIDGET_PREF, 0);
        passwrd = sp.getString(MainActivity.PASSWORD, null);
-       ipaddress_srv = sp.getString(MainActivity.IPADDRESS, null);
+       ipaddress_srv1 = sp.getString(MainActivity.IPADDRESSA, null);
+       ipaddress_srv2 = sp.getString(MainActivity.IPADDRESSB, null);
        port_srv = sp.getString(MainActivity.PORT, null);
+       netchoice = sp.getString(MainActivity.NETCHOICE, null);
+       if(netchoice.equals("true")) {
+           ipaddress_srv = ipaddress_srv1;
+       }else{
+           ipaddress_srv = ipaddress_srv2;
+       }
+       Log.d(LOG_TAG, "ipaddress_srv = " + ipaddress_srv );
+
+
 
        try {
            intport_srv = Integer.parseInt(port_srv);
@@ -424,12 +441,41 @@ public class MainActivity  extends AppCompatActivity  {
                 setContentView(R.layout.config);
                 final SharedPreferences sp = getSharedPreferences(WIDGET_PREF, 0);
 
-                final EditText edit_text_ipaddress = (EditText) findViewById(R.id.et_ipaddress);
+                final EditText edit_text_ipaddress1 = (EditText) findViewById(R.id.et_ipaddress1);
+                final EditText edit_text_ipaddress2 = (EditText) findViewById(R.id.et_ipaddress2);
                 final EditText edit_text_port = (EditText) findViewById(R.id.et_port);
                 final EditText edit_text_password = (EditText) findViewById(R.id.et_password);
-                edit_text_ipaddress.setText(sp.getString(MainActivity.IPADDRESS, null));
+                edit_text_ipaddress1.setText(sp.getString(MainActivity.IPADDRESSA, null));
+                edit_text_ipaddress2.setText(sp.getString(MainActivity.IPADDRESSB, null));
                 edit_text_port.setText(sp.getString(MainActivity.PORT, null));
                 edit_text_password.setText(sp.getString(MainActivity.PASSWORD, null));
+
+                edit_text_ipaddress1.setOnLongClickListener(new View.OnLongClickListener() {
+
+                    @Override
+                    public boolean onLongClick(View view) {
+                        SharedPreferences.Editor editor = sp.edit();
+                        value = "true";
+                        editor.putString(NETCHOICE, "true");
+                        editor.commit();
+                        Vibrator vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
+                        vibrator.vibrate(100);
+                        return false;
+                    }
+                });
+                edit_text_ipaddress2.setOnLongClickListener(new View.OnLongClickListener() {
+
+                    @Override
+                    public boolean onLongClick(View view) {
+                        SharedPreferences.Editor editor = sp.edit();
+                        value = "false";
+                        editor.putString(NETCHOICE, value);
+                        editor.commit();
+                        Vibrator vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
+                        vibrator.vibrate(100);
+                        return false;
+                    }
+                });
 
                 Button button_ok = (Button) findViewById(R.id.button_ok);
                 button_ok.setOnClickListener(new View.OnClickListener() {
@@ -443,19 +489,31 @@ public class MainActivity  extends AppCompatActivity  {
                      //   editor.putString(PASSWORD, edit_text_password.getText().toString());
 
 
-                        ipaddress_srv = edit_text_ipaddress.getText().toString();
+                        ipaddress_srv1 = edit_text_ipaddress1.getText().toString();
+                        ipaddress_srv2 = edit_text_ipaddress2.getText().toString();
+
+                        Log.d(LOG_TAG, ipaddress_srv1 +"   "+ ipaddress_srv2 );
+
                         port_srv = edit_text_port.getText().toString();
                         passwrd = edit_text_password.getText().toString();
 
                         IpAddressValidator validator = new IpAddressValidator();
                         boolean wrongdata = false;
-                        if(validator.isValid(ipaddress_srv)){
+                       if(validator.isValid(ipaddress_srv1)){
                             Log.d(LOG_TAG, "======= ipaddress OK ========");
                         }else{
                             Log.d(LOG_TAG, "======= ipaddress Wrong! ========");
                             wrongdata = true;
                             Toast.makeText(MainActivity.this, "wrong ipaddress!", Toast.LENGTH_SHORT).show();
                         }
+                        if(validator.isValid(ipaddress_srv2)){
+                            Log.d(LOG_TAG, "======= ipaddress OK ========");
+                        }else{
+                            Log.d(LOG_TAG, "======= ipaddress Wrong! ========");
+                            wrongdata = true;
+                            Toast.makeText(MainActivity.this, "wrong ipaddress2!", Toast.LENGTH_SHORT).show();
+                        }
+
                         if (port_srv.matches("\\d{1,5}")) {
                             intport_srv = Integer.parseInt(port_srv);  //65536
                             if(intport_srv>65536){
@@ -482,15 +540,20 @@ public class MainActivity  extends AppCompatActivity  {
                        // } catch(NumberFormatException nfe) { }
 
                         if(!wrongdata){
-                            editor.putString(IPADDRESS, ipaddress_srv);
+                            editor.putString(IPADDRESSA, ipaddress_srv1);
+                            editor.putString(IPADDRESSB, ipaddress_srv2);
                             editor.putString(PORT, port_srv);
                             editor.putString(PASSWORD, passwrd);
 
-
+Log.d(LOG_TAG, ipaddress_srv1 +"   "+ ipaddress_srv2 );
                             Toast.makeText(MainActivity.this, "Saved!", Toast.LENGTH_SHORT).show();}
 
 
                         editor.commit();
+
+                        ipaddress_srv1 = sp.getString(MainActivity.IPADDRESSA, null);
+                        ipaddress_srv2 = sp.getString(MainActivity.IPADDRESSB, null);
+                        Log.d(LOG_TAG, ipaddress_srv1 +"   "+ ipaddress_srv2 );
                         }
                 });
                 break;
