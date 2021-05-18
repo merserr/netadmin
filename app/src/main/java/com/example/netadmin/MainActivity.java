@@ -103,10 +103,13 @@ public class MainActivity  extends AppCompatActivity  {
 
        final SharedPreferences sp = getSharedPreferences(WIDGET_PREF, 0);
        passwrd = sp.getString(MainActivity.PASSWORD, null);
-       ipaddress_srv1 = sp.getString(MainActivity.IPADDRESSA, null);
-       ipaddress_srv2 = sp.getString(MainActivity.IPADDRESSB, null);
-       port_srv = sp.getString(MainActivity.PORT, null);
-       netchoice = sp.getString(MainActivity.NETCHOICE, null);
+       ipaddress_srv1 = sp.getString(MainActivity.IPADDRESSA, "192.168.1.4");
+       ipaddress_srv2 = sp.getString(MainActivity.IPADDRESSB, "192.168.1.4");
+       port_srv = sp.getString(MainActivity.PORT, "1688");
+
+       netchoice = sp.getString(MainActivity.NETCHOICE, "false");
+       Log.d(LOG_TAG, "netchoice = " + netchoice );
+
        if(netchoice.equals("true")) {
            ipaddress_srv = ipaddress_srv1;
        }else{
@@ -450,12 +453,22 @@ public class MainActivity  extends AppCompatActivity  {
                 edit_text_port.setText(sp.getString(MainActivity.PORT, null));
                 edit_text_password.setText(sp.getString(MainActivity.PASSWORD, null));
 
+                if(netchoice.equals("true")) {
+                    edit_text_ipaddress1.setTextColor(getResources().getColor(R.color.g));
+                    edit_text_ipaddress2.setTextColor(getResources().getColor(R.color.gr));
+                }else{
+                    edit_text_ipaddress1.setTextColor(getResources().getColor(R.color.gr));
+                    edit_text_ipaddress2.setTextColor(getResources().getColor(R.color.g));
+                }
+
                 edit_text_ipaddress1.setOnLongClickListener(new View.OnLongClickListener() {
 
                     @Override
                     public boolean onLongClick(View view) {
                         SharedPreferences.Editor editor = sp.edit();
                         value = "true";
+                        edit_text_ipaddress1.setTextColor(getResources().getColor(R.color.g));
+                        edit_text_ipaddress2.setTextColor(getResources().getColor(R.color.gr));
                         editor.putString(NETCHOICE, "true");
                         editor.commit();
                         Vibrator vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
@@ -469,6 +482,8 @@ public class MainActivity  extends AppCompatActivity  {
                     public boolean onLongClick(View view) {
                         SharedPreferences.Editor editor = sp.edit();
                         value = "false";
+                        edit_text_ipaddress1.setTextColor(getResources().getColor(R.color.gr));
+                        edit_text_ipaddress2.setTextColor(getResources().getColor(R.color.g));
                         editor.putString(NETCHOICE, value);
                         editor.commit();
                         Vibrator vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
