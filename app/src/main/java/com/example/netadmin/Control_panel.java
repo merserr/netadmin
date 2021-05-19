@@ -159,6 +159,20 @@ public class Control_panel extends Activity{
                 }
             }
         });
+
+        Button button_ping = (Button) findViewById(R.id.button_ping);
+        button_ping.setText(R.string.string_button_ping);
+        button_ping.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d(LOG_TAG, "onClick button_ping ");
+                IpAddressValidator validator = new IpAddressValidator();
+                if (validator.isValid(ipaddress)) {
+                    sending_command = "ping:ipaddress=" + ipaddress;
+                    send_command_to_server();
+                }
+            }
+        });
     }
 
     void send_command_to_server(){

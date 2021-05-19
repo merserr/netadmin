@@ -31,4 +31,6 @@
     <string name="button_off">Off</string>
     <string name="button_full">Full</string>
     <string name="button_low">Low</string>
+    <string name="string_button_ping">PING</string>
+    <string name="pinganswer">...</string>
 </resources>
