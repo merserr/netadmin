@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.util.Log;
@@ -193,6 +194,9 @@ public class Control_panel extends Activity{
                 if (validator.isValid(ipaddress)) {
                     sending_command = "ping:ipaddress=" + ipaddress;
                     send_command_to_server();
+                    TextView text_ping_answer = (TextView) findViewById(R.id.ping_answer);
+                    text_ping_answer.setText("???");
+                    text_ping_answer.setTextColor(Color.WHITE);
                 }
             }
         });
@@ -214,6 +218,9 @@ public class Control_panel extends Activity{
                // Processing(massage1);
                 if(massage2.matches("pinganswer:.*")){
                     pinganswer= massage2.substring(11);
+                    text_ping_answer.setTextColor(Color.YELLOW);
+                    if(pinganswer.matches(".5/5.*")) {text_ping_answer.setTextColor(Color.GREEN);}
+                    if(pinganswer.matches(".0/5.*")) {text_ping_answer.setTextColor(Color.RED);}
                     Log.d(LOG_TAG, "===PING!=== = " + pinganswer);
                     Vibrator vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
                     vibrator.vibrate(50);
