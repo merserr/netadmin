@@ -1,9 +1,13 @@
 package com.example.netadmin;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -12,6 +16,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.regex.Pattern;
+
+import static com.example.netadmin.MainActivity.BROADCAST_ACTION;
+import static com.example.netadmin.MainActivity.MASSAGE;
 
 public class Control_panel extends Activity{
 
@@ -25,7 +32,10 @@ public class Control_panel extends Activity{
     String macaddress="1122.3344.5566";
     String factory="amx";
     String name="panel";
+    String pinganswer;
+    String age;
 
+    BroadcastReceiver br;
 
 
     private static final String LOG_TAG = "===Control_panel===" ;
@@ -41,6 +51,7 @@ public class Control_panel extends Activity{
         macaddress = getIntent().getStringExtra("macaddress");
         factory = getIntent().getStringExtra("factory");
         name = getIntent().getStringExtra("name");
+        age = "age = " + getIntent().getStringExtra("age") + " min";
 
         try {
             intport_srv = Integer.parseInt(port_srv);
@@ -102,6 +113,9 @@ public class Control_panel extends Activity{
             @Override
             public void onClick(View view) {
                 Log.d(LOG_TAG, "onClick button_on ");
+                Vibrator vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
+                vibrator.vibrate(80);
+
                 MacAddressValidator validator = new MacAddressValidator();
                 if (validator.isValid(macaddress)) {
                     sending_command = "on:macaddress=" + macaddress;
@@ -118,6 +132,8 @@ public class Control_panel extends Activity{
             @Override
             public void onClick(View view) {
                 Log.d(LOG_TAG, "onClick button_off ");
+                Vibrator vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
+                vibrator.vibrate(80);
                 MacAddressValidator validator = new MacAddressValidator();
                 if (validator.isValid(macaddress)) {
                     sending_command = "off:macaddress=" + macaddress;
@@ -134,6 +150,8 @@ public class Control_panel extends Activity{
             @Override
             public void onClick(View view) {
                 Log.d(LOG_TAG, "onClick button_full ");
+                Vibrator vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
+                vibrator.vibrate(80);
                 IpAddressValidator validator = new IpAddressValidator();
                 if (validator.isValid(ipaddress)) {
                     sending_command = "full:ipaddress=" + ipaddress;
@@ -150,6 +168,8 @@ public class Control_panel extends Activity{
             @Override
             public void onClick(View view) {
                 Log.d(LOG_TAG, "onClick button_low ");
+                Vibrator vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
+                vibrator.vibrate(80);
                 IpAddressValidator validator = new IpAddressValidator();
                 if (validator.isValid(ipaddress)) {
                     sending_command = "low:ipaddress=" + ipaddress;
@@ -166,6 +186,9 @@ public class Control_panel extends Activity{
             @Override
             public void onClick(View view) {
                 Log.d(LOG_TAG, "onClick button_ping ");
+                Vibrator vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
+                vibrator.vibrate(80);
+                ipaddress = text.getText().toString();
                 IpAddressValidator validator = new IpAddressValidator();
                 if (validator.isValid(ipaddress)) {
                     sending_command = "ping:ipaddress=" + ipaddress;
@@ -173,7 +196,45 @@ public class Control_panel extends Activity{
                 }
             }
         });
+
+        final TextView text_ping_answer = (TextView) findViewById(R.id.ping_answer);
+        text_ping_answer.setText(age);
+
+        //==========================================================================
+        // Receive massage from TCPService and make Toast
+        //==========================================================================
+        // create BroadcastReceiver
+
+        br = new BroadcastReceiver() {
+            public void onReceive(Context context, Intent intent) {
+                String massage2 = intent.getStringExtra(MASSAGE);
+
+                Log.d(LOG_TAG, "onReceive: massage1 = " + massage2);
+                assert massage2 != null;
+               // Processing(massage1);
+                if(massage2.matches("pinganswer:.*")){
+                    pinganswer= massage2.substring(11);
+                    Log.d(LOG_TAG, "===PING!=== = " + pinganswer);
+                    Vibrator vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
+                    vibrator.vibrate(50);
+                    text_ping_answer.setText(pinganswer);
+
+                }
+
+            }
+        };
+        // create filter for BroadcastReceiver
+        IntentFilter intFilt = new IntentFilter(BROADCAST_ACTION);
+        // registration (On) BroadcastReceiver
+        registerReceiver(br, intFilt);
+        //==========================================================================
     }
+
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(br);
+    }
+
 
     void send_command_to_server(){
 

@@ -63,7 +63,6 @@ public class MainActivity  extends AppCompatActivity  {
     String ipaddress_srv1;
     String ipaddress_srv2;
     String ipaddress_srv3;
-    String value;
     String netchoice;
     String port_srv;
     int intport_srv=23; // 1688
@@ -72,6 +71,7 @@ public class MainActivity  extends AppCompatActivity  {
     String macaddress="1122.3344.5566";
     String factory="amx";
     String name="panel";
+    String age="age";
 
     //Создаем список вьюх которые будут создаваться
     private List<View> allEds;
@@ -139,7 +139,7 @@ public class MainActivity  extends AppCompatActivity  {
        //getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_HOME | ActionBar.DISPLAY_SHOW_TITLE | ActionBar.DISPLAY_HOME_AS_UP | ActionBar.DISPLAY_USE_LOGO);
 
 
-//==========================================================================
+       //==========================================================================
        // Receive massage from TCPService and make Toast
        //==========================================================================
        // create BroadcastReceiver
@@ -182,6 +182,8 @@ public class MainActivity  extends AppCompatActivity  {
        button_save.setOnClickListener(new View.OnClickListener() {
            @Override
            public void onClick(View view) {
+               Vibrator vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
+               vibrator.vibrate(80);
                writeFile();
            }
        });
@@ -189,6 +191,8 @@ public class MainActivity  extends AppCompatActivity  {
        button_readSD.setOnClickListener(new View.OnClickListener() {
            @Override
            public void onClick(View view) {
+               Vibrator vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
+               vibrator.vibrate(80);
                readFileSD();
            }
        });
@@ -196,6 +200,8 @@ public class MainActivity  extends AppCompatActivity  {
        button_read.setOnClickListener(new View.OnClickListener() {
            @Override
            public void onClick(View view) {
+               Vibrator vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
+               vibrator.vibrate(80);
                readFile();
            }
        });
@@ -203,12 +209,18 @@ public class MainActivity  extends AppCompatActivity  {
        button_read_cisco.setOnClickListener(new View.OnClickListener() {
            @Override
            public void onClick(View view) {
+               Vibrator vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
+               vibrator.vibrate(80);
                get_data_from_server();
            }
        });
 
    }
 
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(br);
+    }
 
 
     void writeFile() {
@@ -306,9 +318,6 @@ public class MainActivity  extends AppCompatActivity  {
 
         if (str.matches("[0-9A-Fa-f]{2}[-:][0-9A-Fa-f]{2}[-:][0-9A-Fa-f]{2}[-:][0-9A-Fa-f]{2}[-:][0-9A-Fa-f]{2}[-:][0-9A-Fa-f]{2}.*")) {
             Log.d(LOG_TAG, "input parseline Massage: "+ str);
-            //int dummyi;
-            //dummyi = str.indexOf("r001") + 8;
-            //macaddroutput = str.substring(dummyi, (dummyi + 1));
             macaddroutput[0] = str.substring(0, (0 + 17));
             macaddroutput[1] = str.substring(18);
             Log.d(LOG_TAG, "macaddroutput = "+macaddroutput);
@@ -367,6 +376,7 @@ public class MainActivity  extends AppCompatActivity  {
                 macaddress = ((TextView)view.findViewWithTag("id2")).getText().toString();
                 factory = ((TextView)view.findViewWithTag("id4")).getText().toString();
                 name = ((TextView)view.findViewWithTag("id5")).getText().toString();
+                age = ((Button)view.findViewWithTag("id3")).getText().toString();
 
 
                 Log.d(LOG_TAG, "===== ipaddress ====== : "+ipaddress);
@@ -382,14 +392,12 @@ public class MainActivity  extends AppCompatActivity  {
                 intent.putExtra("macaddress", macaddress);
                 intent.putExtra("factory", factory);
                 intent.putExtra("name", name);
+                intent.putExtra("age", age);
                 intent.setClass(ctx, Control_panel.class);
                 startActivity(intent);
                 return false;
             }
         });
-
-
-
 
         //добавляем все что создаем в массив
         allEds.add(view);
@@ -397,21 +405,11 @@ public class MainActivity  extends AppCompatActivity  {
         linear.addView(view);
     }
 
-    private void initialise_control_panel() {
-
-        //TextView text = (TextView) view2.findViewById(R.id.editText);
-        //text.setText(textfield[0]);
-           //text.setText("192.168.100.222");
-
-
-
-    }
-
-
     void Processing(String inputMassage){
     //    Toast.makeText(MainActivity.this, inputMassage, Toast.LENGTH_LONG).show();
         //Log.d(LOG_TAG, "input Processing Massage1: "+ inputMassage);
         if (inputMassage.matches("\\{\\{.*\\}\\}")) {
+            inputMassage = inputMassage.substring(2);
 
             String line[] = inputMassage.split("\\}\\{");  // по пробелу
             String clients[][] = new String[line.length][5];

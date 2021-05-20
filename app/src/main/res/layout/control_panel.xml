@@ -138,16 +138,15 @@
             android:textColor="@color/title"
             android:text="@string/string_button_off" >
         </Button>
-        <Button
-            android:id="@+id/button_ping"
-            android:layout_width="130dp"
-            android:layout_height="60dp"
-            android:layout_marginTop="25dp"
-            android:layout_marginLeft="30dp"
-            android:layout_marginRight="30dp"
-            android:textColor="@color/title"
-            android:text="@string/string_button_ping" >
-        </Button>
+        <TextView
+            android:id="@+id/ping_answer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
+            android:text="@string/pinganswer"
+            android:textAlignment="center"
+            android:textColor="@color/edit_text"
+            android:textSize="@dimen/dimentionIP" />
     </LinearLayout>
     <LinearLayout
         android:layout_width="wrap_content"
@@ -173,15 +172,18 @@
             android:textColor="@color/title"
             android:text="@string/string_button_low" >
         </Button>
-        <TextView
-            android:id="@+id/ping_answer"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
-            android:text="@string/pinganswer"
-            android:textAlignment="center"
-            android:textColor="@color/edit_text"
-            android:textSize="@dimen/dimentionIP" />
+        <Button
+            android:id="@+id/button_ping"
+            android:layout_width="130dp"
+            android:layout_height="60dp"
+            android:layout_marginTop="25dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:textColor="@color/title"
+            android:text="@string/string_button_ping" >
+        </Button>
+
+
     </LinearLayout>
         </LinearLayout>
 

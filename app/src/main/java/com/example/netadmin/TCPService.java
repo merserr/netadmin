@@ -83,7 +83,7 @@ public class TCPService extends Service {
 
             try {
                 socket = new Socket();
-                socket.setSoTimeout(10000);
+                socket.setSoTimeout(15000);
                 socket.connect(new InetSocketAddress(ipaddress, port), 2000);
                 connect=socket.isConnected();
 
