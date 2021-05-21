@@ -158,11 +158,8 @@ public class MainActivity  extends AppCompatActivity  {
        registerReceiver(br, intFilt);
        //==========================================================================
 
-       Button button_save = (Button) findViewById(R.id.button_save);
-       Button button_read = (Button) findViewById(R.id.button_read);
-       Button button_readSD = (Button) findViewById(R.id.button_read_SD);
-       Button addButton = (Button) findViewById(R.id.button);
-       Button button_read_cisco = (Button) findViewById(R.id.button_read_cisco);
+       Button button_get_data_from_database = (Button) findViewById(R.id.button_read_SD);
+       Button button_get_data_from_cisco = (Button) findViewById(R.id.button_read_cisco);
 
        //инициализировали наш массив с edittext.aми
        allEds = new ArrayList<View>();
@@ -179,39 +176,23 @@ public class MainActivity  extends AppCompatActivity  {
         });
 */
 
-       button_save.setOnClickListener(new View.OnClickListener() {
+       button_get_data_from_database.setOnClickListener(new View.OnClickListener() {
            @Override
            public void onClick(View view) {
                Vibrator vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
-               vibrator.vibrate(80);
-               writeFile();
+               vibrator.vibrate(70);
+               String source = "database";
+               get_data_from_server(source);
            }
        });
 
-       button_readSD.setOnClickListener(new View.OnClickListener() {
+        button_get_data_from_cisco.setOnClickListener(new View.OnClickListener() {
            @Override
            public void onClick(View view) {
                Vibrator vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
-               vibrator.vibrate(80);
-               readFileSD();
-           }
-       });
-
-       button_read.setOnClickListener(new View.OnClickListener() {
-           @Override
-           public void onClick(View view) {
-               Vibrator vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
-               vibrator.vibrate(80);
-               readFile();
-           }
-       });
-
-       button_read_cisco.setOnClickListener(new View.OnClickListener() {
-           @Override
-           public void onClick(View view) {
-               Vibrator vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
-               vibrator.vibrate(80);
-               get_data_from_server();
+               vibrator.vibrate(70);
+               String source = "cisco";
+               get_data_from_server(source);
            }
        });
 
@@ -293,7 +274,7 @@ public class MainActivity  extends AppCompatActivity  {
         }
     }
 
-    void get_data_from_server(){
+    void get_data_from_server(String source){
         //Toast.makeText(this, "Отслеживание переключения: " + (isChecked ? "on" : "off"), Toast.LENGTH_SHORT).show();
 
         //String macaddresfromtextview = ((TextView)((View)(compoundButton.getParent())).findViewWithTag("id1")).getText().toString();
@@ -301,7 +282,8 @@ public class MainActivity  extends AppCompatActivity  {
         //String command = isChecked ? "ON :" : "OFF:";
         //String sending_command = command + macaddresfromtextview;
         String sending_command = "info";
-
+        if(source.equals("database")){sending_command = "getdatafromdatabase";}
+        if(source.equals("cisco")){sending_command = "info";}
      //   ctx0 = (Context) MainActivity.this;
         Intent intent = new Intent();
         intent.setClass(MainActivity.this, TCPService.class);

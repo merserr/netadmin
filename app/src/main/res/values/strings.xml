@@ -33,4 +33,6 @@
     <string name="button_low">Low</string>
     <string name="string_button_ping">PING</string>
     <string name="pinganswer">...</string>
+    <string name="database">DATABASE</string>
+    <string name="cisco">CISCO</string>
 </resources>

@@ -12,7 +12,7 @@
 
     <ScrollView
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="630dp"
         android:layout_marginTop="10dp">
 
         <LinearLayout
@@ -41,34 +41,17 @@
 
         <Button
             android:id="@+id/button_read_SD"
-            android:layout_width="wrap_content"
+            android:layout_width="180dp"
             android:layout_height="wrap_content"
-            android:text="ReadSD"
-            app:layout_constraintStart_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent" />
-        <Button
-            android:id="@+id/button_save"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="0dp"
-            android:layout_marginLeft="0dp"
-            android:text="Save"
-            app:layout_constraintStart_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent" />
-
-        <Button
-            android:id="@+id/button_read"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Read"
+            android:text="@string/database"
             app:layout_constraintStart_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent" />
 
         <Button
             android:id="@+id/button_read_cisco"
-            android:layout_width="wrap_content"
+            android:layout_width="180dp"
             android:layout_height="wrap_content"
-            android:text="Read Ci"
+            android:text="@string/cisco"
             app:layout_constraintStart_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent" />
         />
