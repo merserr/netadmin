@@ -82,6 +82,8 @@ public class Control_panel extends Activity{
             @Override
             public void onClick(View view) {
                 Log.d(LOG_TAG, "onClick button_save ");
+                Vibrator vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
+                vibrator.vibrate(70);
                 ipaddress = text.getText().toString();
                 macaddress = text2.getText().toString();
                 factory = text3.getText().toString();
@@ -188,7 +190,7 @@ public class Control_panel extends Activity{
             public void onClick(View view) {
                 Log.d(LOG_TAG, "onClick button_ping ");
                 Vibrator vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
-                vibrator.vibrate(80);
+                vibrator.vibrate(60);
                 ipaddress = text.getText().toString();
                 IpAddressValidator validator = new IpAddressValidator();
                 if (validator.isValid(ipaddress)) {
