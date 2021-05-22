@@ -36,11 +36,11 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_marginLeft="145dp"
-        android:layout_marginTop="3dp"
+        android:layout_marginTop="1dp"
         android:textSize="18dp"
         android:text="-" />
     <TextView
-        android:layout_width="160dp"
+        android:layout_width="175dp"
         android:layout_height="wrap_content"
         android:id="@+id/editText4"
         android:tag="id4"
@@ -50,7 +50,7 @@
         android:textSize="18dp"
         android:text="manufactur" />
     <TextView
-        android:layout_width="160dp"
+        android:layout_width="175dp"
         android:layout_height="wrap_content"
         android:id="@+id/editText5"
         android:tag="id5"

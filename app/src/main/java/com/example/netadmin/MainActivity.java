@@ -403,7 +403,7 @@ public class MainActivity  extends AppCompatActivity  {
                 clients[count][2] = subline[2];
                 clients[count][3] = subline[3];
                 clients[count][4] = subline[4];
-        //        Log.d(LOG_TAG, clients[count][0]+"   "+clients[count][1]+"   "+clients[count][2]+"   "+clients[count][3]+"   "+clients[count][4]);
+                Log.d(LOG_TAG, clients[count][0]+"   "+clients[count][1]+"   "+clients[count][2]+"   "+clients[count][3]+"   "+clients[count][4]);
                 createfield(subline);
                 count++;
             }
