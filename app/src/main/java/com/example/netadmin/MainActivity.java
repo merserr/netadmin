@@ -218,7 +218,7 @@ public class MainActivity  extends AppCompatActivity  {
 
     private void get_test_data() {
         Log.d(LOG_TAG, "get_test_data");
-        String inputMassage = "{{192.168.1.1:a80c.0df3.1234:-:Cisco:Gateway}{192.168.1.2:1122.3344.5501:4:Samsung:mother}{192.168.1.3:2211.546b.3259:0:Apple:father}{192.168.1.4:0051.ad32.2f30:0:Sony:guest}{192.168.1.6:684f.f07d.dd55:1:D-Link:switch}{192.168.1.8:7654.fda7.d3f8:32:Xiaomi:son}{192.168.1.11:b887.b277.a591:58:no data:guest2}{192.168.1.22:a50c.11f3.3f02:-:Cisco:phone}}";
+        String inputMassage = "{{192.168.1.1:a80c.0df3.1234:-:Cisco:Gateway}{192.168.1.5:1122.3344.5501:4:Gigabyte:HTPC}{192.168.1.3:2211.546b.3259:0:Apple:father}{192.168.1.4:0051.ad32.2f30:0:Sony:guest}{192.168.1.6:684f.f07d.dd55:1:D-Link:switch}{192.168.1.8:7654.fda7.d3f8:32:Xiaomi:son}{192.168.1.11:b887.b277.a591:58:no data:guest2}{192.168.1.22:a50c.11f3.3f02:-:Cisco:phone}}";
         Intent intent1 = new Intent(MainActivity.BROADCAST_ACTION);
         intent1.putExtra(MASSAGE, inputMassage);
         sendBroadcast(intent1);
