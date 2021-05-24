@@ -75,8 +75,6 @@ public class MainActivity  extends AppCompatActivity  {
 
     //Создаем список вьюх которые будут создаваться
     private List<View> allEds;
-    //счетчик чисто декоративный для визуального отображения edittext'ov
-    private int counter = 0;
     BroadcastReceiver br;
     private Activity view2;
     Context ctx;
@@ -338,7 +336,7 @@ public class MainActivity  extends AppCompatActivity  {
 
     void createfield(String[] textfield){
         final LinearLayout linear = (LinearLayout) findViewById(R.id.linear);
-        counter++;
+
         //берем наш кастомный лейаут находим через него все наши кнопки и едит тексты, задаем нужные данные
         final View view = getLayoutInflater().inflate(R.layout.custom_edittext_layout, null);
 
@@ -424,13 +422,21 @@ public class MainActivity  extends AppCompatActivity  {
             int count=0;
             while (count < line.length){
                 String subline[] = line[count].split(":");
-                clients[count][0] = subline[0];
-                clients[count][1] = subline[1];
-                clients[count][2] = subline[2];
-                clients[count][3] = subline[3];
-                clients[count][4] = subline[4];
+                String subline2[] = new String[5];
+                Log.d(LOG_TAG, "subline_length = "+subline.length);
+
+                clients[count][0] = subline2[0] = subline[0];
+                clients[count][1] = subline2[1] = subline[1];
+                clients[count][2] = subline2[2] = subline[2];
+                if(subline.length < 4) {subline2[3]="-";}else{subline2[3] = subline[3];}
+                if(subline.length < 5) {subline2[4]="-";}else{subline2[4] = subline[4];}
+                clients[count][3] = subline2[3];
+                clients[count][4] = subline2[4];
+
+            //    if(subline.length > 3) {clients[count][3] = subline[3];}else{clients[count][3] = "-";}
+            //    if(subline.length > 4) {clients[count][4] = subline[4];}else{clients[count][4] = "-";}
                 Log.d(LOG_TAG, clients[count][0]+"   "+clients[count][1]+"   "+clients[count][2]+"   "+clients[count][3]+"   "+clients[count][4]);
-                createfield(subline);
+                createfield(subline2);
                 count++;
             }
 
