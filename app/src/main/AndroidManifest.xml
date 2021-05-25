@@ -22,10 +22,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <service android:name="TCPService"></service>
+        <service android:name="TCPService" />
         <activity
             android:name=".Control_panel"
-            android:label="@string/title_activity_Control_panel"></activity>
+            android:label="@string/title_activity_Control_panel" />
     </application>
 
 </manifest>

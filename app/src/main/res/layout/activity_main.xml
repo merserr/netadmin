@@ -23,7 +23,7 @@
             android:layout_below="@+id/button"
             android:layout_alignEnd="@+id/button"
             android:layout_alignRight="@+id/button"
-            android:orientation="vertical"></LinearLayout>
+            android:orientation="vertical" />
 
     </ScrollView>
 

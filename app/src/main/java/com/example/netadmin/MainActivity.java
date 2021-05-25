@@ -61,7 +61,6 @@ public class MainActivity  extends AppCompatActivity  {
     //Создаем список вьюх которые будут создаваться
     private List<View> allEds;
     BroadcastReceiver br;
-    private Activity view2;
     Context ctx;
 
    @SuppressLint("MissingSuperCall")
@@ -69,7 +68,7 @@ public class MainActivity  extends AppCompatActivity  {
        super.onCreate(savedInstanceState);
 
        setContentView(R.layout.activity_main);
-       ctx = (Context)MainActivity.this;
+       ctx = MainActivity.this;
 
 
 
@@ -82,6 +81,7 @@ public class MainActivity  extends AppCompatActivity  {
 
        //    ============  add logo in toolbar (2nd variant) ======
        ActionBar menu = getSupportActionBar();
+       assert menu != null;
        menu.setDisplayShowHomeEnabled(true);
        menu.setIcon(R.mipmap.ic_launcher);
 
@@ -96,18 +96,22 @@ public class MainActivity  extends AppCompatActivity  {
        netchoice = sp.getString(MainActivity.NETCHOICE, "1");
        Log.d(LOG_TAG, "netchoice = " + netchoice );
 
-       if(netchoice.equals("1")) {
-           ipaddress_srv = ipaddress_srv1;
-       }else if(netchoice.equals("2")){
-           ipaddress_srv = ipaddress_srv2;
-       }else if(netchoice.equals("3")){
-           ipaddress_srv = ipaddress_srv3;
+       switch (netchoice) {
+           case "1":
+               ipaddress_srv = ipaddress_srv1;
+               break;
+           case "2":
+               ipaddress_srv = ipaddress_srv2;
+               break;
+           case "3":
+               ipaddress_srv = ipaddress_srv3;
+               break;
        }
        Log.d(LOG_TAG, "ipaddress_srv = " + ipaddress_srv );
 
        try {
            intport_srv = Integer.parseInt(port_srv);
-       } catch (NumberFormatException nfe) {
+       } catch (NumberFormatException ignored) {
 
        }
 
@@ -135,10 +139,10 @@ public class MainActivity  extends AppCompatActivity  {
        registerReceiver(br, intFilt);
        //==========================================================================
 
-       Button button_get_data_from_database = (Button) findViewById(R.id.button_read_SD);
-       Button button_get_data_from_cisco = (Button) findViewById(R.id.button_read_cisco);
+       Button button_get_data_from_database = findViewById(R.id.button_read_SD);
+       Button button_get_data_from_cisco = findViewById(R.id.button_read_cisco);
 
-       allEds = new ArrayList<View>();
+       allEds = new ArrayList<>();
 
        button_get_data_from_database.setOnClickListener(new View.OnClickListener() {
            @Override
@@ -146,7 +150,7 @@ public class MainActivity  extends AppCompatActivity  {
                Vibrator vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
                vibrator.vibrate(70);
                allEds.clear();
-               final LinearLayout linear = (LinearLayout) findViewById(R.id.linear);
+               final LinearLayout linear = findViewById(R.id.linear);
                linear.removeAllViews();
                String source = "database";
                get_data_from_server(source);
@@ -158,7 +162,7 @@ public class MainActivity  extends AppCompatActivity  {
                Vibrator vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
                vibrator.vibrate(70);
                allEds.clear();
-               final LinearLayout linear = (LinearLayout) findViewById(R.id.linear);
+               final LinearLayout linear = findViewById(R.id.linear);
                linear.removeAllViews();
                get_test_data();
                return true;
@@ -171,7 +175,7 @@ public class MainActivity  extends AppCompatActivity  {
                Vibrator vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
                vibrator.vibrate(70);
                allEds.clear();
-               final LinearLayout linear = (LinearLayout) findViewById(R.id.linear);
+               final LinearLayout linear = findViewById(R.id.linear);
                linear.removeAllViews();
                String source = "cisco";
                get_data_from_server(source);
@@ -207,16 +211,16 @@ public class MainActivity  extends AppCompatActivity  {
     }
 
     void createfield(String[] textfield){
-        final LinearLayout linear = (LinearLayout) findViewById(R.id.linear);
+        final LinearLayout linear = findViewById(R.id.linear);
 
         //берем наш кастомный лейаут находим через него все наши кнопки и едит тексты, задаем нужные данные
         final View view = getLayoutInflater().inflate(R.layout.custom_edittext_layout, null);
 
-        TextView text = (TextView) view.findViewById(R.id.editText);
+        TextView text = view.findViewById(R.id.editText);
         text.setText(textfield[0]);
      //   text.setText("192.168.100.222");
 
-        TextView text2 = (TextView) view.findViewById(R.id.editText2);
+        TextView text2 = view.findViewById(R.id.editText2);
         text2.setText(textfield[1]);
      //   text2.setText("1122.3344.5566");
 
@@ -226,16 +230,16 @@ public class MainActivity  extends AppCompatActivity  {
      //   text3.setText("111");
 
 
-        TextView text4 = (TextView) view.findViewById(R.id.editText4);
+        TextView text4 = view.findViewById(R.id.editText4);
         text4.setText(textfield[3]);
      //  text4.setText("manufacture");
 
 
-        TextView text5 = (TextView) view.findViewById(R.id.editText5);
+        TextView text5 = view.findViewById(R.id.editText5);
         text5.setText(textfield[4]);
      //   text5.setText("name-name");
 
-        Button buttongo = (Button) view.findViewById(R.id.button_go);
+        Button buttongo = view.findViewById(R.id.button_go);
         buttongo.setText(textfield[2]);
      //   registerForContextMenu(buttongo);
 
@@ -288,12 +292,12 @@ public class MainActivity  extends AppCompatActivity  {
         if (inputMassage.matches("\\{\\{.*\\}\\}")) {
             inputMassage = inputMassage.substring(2);
 
-            String line[] = inputMassage.split("\\}\\{");  // по пробелу
-            String clients[][] = new String[line.length][5];
+            String[] line = inputMassage.split("\\}\\{");  // по пробелу
+            String[][] clients = new String[line.length][5];
             int count=0;
             while (count < line.length){
-                String subline[] = line[count].split(":");
-                String subline2[] = new String[5];
+                String[] subline = line[count].split(":");
+                String[] subline2 = new String[5];
             //    Log.d(LOG_TAG, "subline_length = "+subline.length);
 
                 clients[count][0] = subline2[0] = subline[0];
@@ -332,29 +336,33 @@ public class MainActivity  extends AppCompatActivity  {
                 setContentView(R.layout.config);
                 final SharedPreferences sp = getSharedPreferences(WIDGET_PREF, 0);
 
-                final EditText edit_text_ipaddress1 = (EditText) findViewById(R.id.et_ipaddress1);
-                final EditText edit_text_ipaddress2 = (EditText) findViewById(R.id.et_ipaddress2);
-                final EditText edit_text_ipaddress3 = (EditText) findViewById(R.id.et_ipaddress3);
-                final EditText edit_text_port = (EditText) findViewById(R.id.et_port);
-                final EditText edit_text_password = (EditText) findViewById(R.id.et_password);
+                final EditText edit_text_ipaddress1 = findViewById(R.id.et_ipaddress1);
+                final EditText edit_text_ipaddress2 = findViewById(R.id.et_ipaddress2);
+                final EditText edit_text_ipaddress3 = findViewById(R.id.et_ipaddress3);
+                final EditText edit_text_port = findViewById(R.id.et_port);
+                final EditText edit_text_password = findViewById(R.id.et_password);
                 edit_text_ipaddress1.setText(sp.getString(MainActivity.IPADDRESSA, null));
                 edit_text_ipaddress2.setText(sp.getString(MainActivity.IPADDRESSB, null));
                 edit_text_ipaddress3.setText(sp.getString(MainActivity.IPADDRESSC, null));
                 edit_text_port.setText(sp.getString(MainActivity.PORT, null));
                 edit_text_password.setText(sp.getString(MainActivity.PASSWORD, null));
 
-                if(netchoice.equals("1")) {
-                    edit_text_ipaddress1.setTextColor(getResources().getColor(R.color.g));
-                    edit_text_ipaddress2.setTextColor(getResources().getColor(R.color.gr));
-                    edit_text_ipaddress3.setTextColor(getResources().getColor(R.color.gr));
-                }else if(netchoice.equals("2")){
-                    edit_text_ipaddress1.setTextColor(getResources().getColor(R.color.gr));
-                    edit_text_ipaddress2.setTextColor(getResources().getColor(R.color.g));
-                    edit_text_ipaddress3.setTextColor(getResources().getColor(R.color.gr));
-                }else if(netchoice.equals("3")){
-                    edit_text_ipaddress1.setTextColor(getResources().getColor(R.color.gr));
-                    edit_text_ipaddress2.setTextColor(getResources().getColor(R.color.gr));
-                    edit_text_ipaddress3.setTextColor(getResources().getColor(R.color.g));
+                switch (netchoice) {
+                    case "1":
+                        edit_text_ipaddress1.setTextColor(getResources().getColor(R.color.g));
+                        edit_text_ipaddress2.setTextColor(getResources().getColor(R.color.gr));
+                        edit_text_ipaddress3.setTextColor(getResources().getColor(R.color.gr));
+                        break;
+                    case "2":
+                        edit_text_ipaddress1.setTextColor(getResources().getColor(R.color.gr));
+                        edit_text_ipaddress2.setTextColor(getResources().getColor(R.color.g));
+                        edit_text_ipaddress3.setTextColor(getResources().getColor(R.color.gr));
+                        break;
+                    case "3":
+                        edit_text_ipaddress1.setTextColor(getResources().getColor(R.color.gr));
+                        edit_text_ipaddress2.setTextColor(getResources().getColor(R.color.gr));
+                        edit_text_ipaddress3.setTextColor(getResources().getColor(R.color.g));
+                        break;
                 }
 
                 edit_text_ipaddress1.setOnLongClickListener(new View.OnLongClickListener() {
@@ -403,7 +411,7 @@ public class MainActivity  extends AppCompatActivity  {
                     }
                 });
 
-                Button button_ok = (Button) findViewById(R.id.button_ok);
+                Button button_ok = findViewById(R.id.button_ok);
                 button_ok.setOnClickListener(new View.OnClickListener() {
 
                     @Override
@@ -489,7 +497,7 @@ public class MainActivity  extends AppCompatActivity  {
         return true;
     }
 
-    public class IpAddressValidator {
+    public static class IpAddressValidator {
 
         private static final String zeroTo255 = "([01]?[0-9]{1,2}|2[0-4][0-9]|25[0-5])";
 

@@ -64,19 +64,19 @@ public class Control_panel extends Activity{
 
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
-        final TextView text = (TextView) findViewById(R.id.editText);
+        final TextView text = findViewById(R.id.editText);
         text.setText(ipaddress);
 
-        final TextView text2 = (TextView) findViewById(R.id.editText2);
+        final TextView text2 = findViewById(R.id.editText2);
         text2.setText(macaddress);
 
-        final TextView text3 = (TextView) findViewById(R.id.editText3);
+        final TextView text3 = findViewById(R.id.editText3);
         text3.setText(factory);
 
-        final TextView text4 = (TextView) findViewById(R.id.editText4);
+        final TextView text4 = findViewById(R.id.editText4);
         text4.setText(name);
 
-        Button button_save = (Button) findViewById(R.id.button_save);
+        Button button_save = findViewById(R.id.button_save);
         button_save.setText(R.string.button_save);
         button_save.setOnClickListener(new OnClickListener() {
             @Override
@@ -110,7 +110,7 @@ public class Control_panel extends Activity{
             }
         });
 
-        Button button_on = (Button) findViewById(R.id.button_on);
+        Button button_on = findViewById(R.id.button_on);
         button_on.setText(R.string.button_on);
         button_on.setOnClickListener(new OnClickListener() {
             @Override
@@ -129,7 +129,7 @@ public class Control_panel extends Activity{
             }
         });
 
-        Button button_off = (Button) findViewById(R.id.button_off);
+        Button button_off = findViewById(R.id.button_off);
         button_off.setText(R.string.button_off);
         button_off.setOnClickListener(new OnClickListener() {
             @Override
@@ -147,7 +147,7 @@ public class Control_panel extends Activity{
             }
         });
 
-        Button button_full = (Button) findViewById(R.id.button_full);
+        Button button_full = findViewById(R.id.button_full);
         button_full.setText(R.string.button_full);
         button_full.setOnClickListener(new OnClickListener() {
             @Override
@@ -165,7 +165,7 @@ public class Control_panel extends Activity{
             }
         });
 
-        Button button_low = (Button) findViewById(R.id.button_low);
+        Button button_low = findViewById(R.id.button_low);
         button_low.setText(R.string.button_low);
         button_low.setOnClickListener(new OnClickListener() {
             @Override
@@ -183,7 +183,7 @@ public class Control_panel extends Activity{
             }
         });
 
-        Button button_ping = (Button) findViewById(R.id.button_ping);
+        Button button_ping = findViewById(R.id.button_ping);
         button_ping.setText(R.string.string_button_ping);
         button_ping.setOnClickListener(new OnClickListener() {
             @Override
@@ -196,14 +196,14 @@ public class Control_panel extends Activity{
                 if (validator.isValid(ipaddress)) {
                     sending_command = "ping:ipaddress=" + ipaddress;
                     send_command_to_server();
-                    TextView text_ping_answer = (TextView) findViewById(R.id.ping_answer);
+                    TextView text_ping_answer = findViewById(R.id.ping_answer);
                     text_ping_answer.setText("???");
                     text_ping_answer.setTextColor(Color.WHITE);
                 }
             }
         });
 
-        final TextView text_ping_answer = (TextView) findViewById(R.id.ping_answer);
+        final TextView text_ping_answer = findViewById(R.id.ping_answer);
         text_ping_answer.setText(age);
 
         //==========================================================================
