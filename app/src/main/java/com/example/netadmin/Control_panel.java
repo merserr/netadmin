@@ -117,7 +117,7 @@ public class Control_panel extends Activity{
             public void onClick(View view) {
                 Log.d(LOG_TAG, "onClick button_on ");
                 Vibrator vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
-                vibrator.vibrate(80);
+                vibrator.vibrate(70);
 
                 MacAddressValidator validator = new MacAddressValidator();
                 if (validator.isValid(macaddress)) {
@@ -136,7 +136,7 @@ public class Control_panel extends Activity{
             public void onClick(View view) {
                 Log.d(LOG_TAG, "onClick button_off ");
                 Vibrator vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
-                vibrator.vibrate(80);
+                vibrator.vibrate(70);
                 MacAddressValidator validator = new MacAddressValidator();
                 if (validator.isValid(macaddress)) {
                     sending_command = "off:macaddress=" + macaddress;
@@ -154,7 +154,7 @@ public class Control_panel extends Activity{
             public void onClick(View view) {
                 Log.d(LOG_TAG, "onClick button_full ");
                 Vibrator vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
-                vibrator.vibrate(80);
+                vibrator.vibrate(70);
                 IpAddressValidator validator = new IpAddressValidator();
                 if (validator.isValid(ipaddress)) {
                     sending_command = "full:ipaddress=" + ipaddress;
@@ -172,7 +172,7 @@ public class Control_panel extends Activity{
             public void onClick(View view) {
                 Log.d(LOG_TAG, "onClick button_low ");
                 Vibrator vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
-                vibrator.vibrate(80);
+                vibrator.vibrate(70);
                 IpAddressValidator validator = new IpAddressValidator();
                 if (validator.isValid(ipaddress)) {
                     sending_command = "low:ipaddress=" + ipaddress;
@@ -190,7 +190,7 @@ public class Control_panel extends Activity{
             public void onClick(View view) {
                 Log.d(LOG_TAG, "onClick button_ping ");
                 Vibrator vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
-                vibrator.vibrate(60);
+                vibrator.vibrate(70);
                 ipaddress = text.getText().toString();
                 IpAddressValidator validator = new IpAddressValidator();
                 if (validator.isValid(ipaddress)) {
@@ -225,7 +225,7 @@ public class Control_panel extends Activity{
                     if(pinganswer.matches(".0/5.*")) {text_ping_answer.setTextColor(Color.RED);}
                     Log.d(LOG_TAG, "===PING!=== = " + pinganswer);
                     Vibrator vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
-                    vibrator.vibrate(50);
+                    vibrator.vibrate(70);
                     text_ping_answer.setText(pinganswer);
 
                 }

@@ -12,7 +12,6 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Vibrator;
 import android.util.Log;
 import android.view.Menu;
@@ -24,21 +23,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
 
 public class MainActivity  extends AppCompatActivity  {
-
 
     public final static String WIDGET_PREF = "widget_pref";
     public final static String IPADDRESSA = "ipaddress1";
@@ -51,13 +41,8 @@ public class MainActivity  extends AppCompatActivity  {
 
     public static final String BROADCAST_ACTION = "com.example.netadmin";
     public final static String MASSAGE = "inputMassage";
-    private static final String FILENAME = "herdcontroldata.csv";
     private static final String LOG_TAG ="==MainActivity==" ;
-    private static final String FILENAME_SD = "herdcontroldata.csv";
-    private static final String DIR_SD = "Install";
 
-
-    String herddata = "";
     String passwrd;
     String ipaddress_srv;
     String ipaddress_srv1;
@@ -120,22 +105,16 @@ public class MainActivity  extends AppCompatActivity  {
        }
        Log.d(LOG_TAG, "ipaddress_srv = " + ipaddress_srv );
 
-
-
        try {
            intport_srv = Integer.parseInt(port_srv);
        } catch (NumberFormatException nfe) {
 
        }
 
-
        //Toolbar toolbar = findViewById(R.id.toolbar);
        //toolbar.setLogo(R.mipmap.ic_launcher);        // add logo in toolbar
        //setSupportActionBar(toolbar);                 // add name & calling menu
-
-
        //getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_HOME | ActionBar.DISPLAY_SHOW_TITLE | ActionBar.DISPLAY_HOME_AS_UP | ActionBar.DISPLAY_USE_LOGO);
-
 
        //==========================================================================
        // Receive massage from TCPService and make Toast
@@ -159,20 +138,7 @@ public class MainActivity  extends AppCompatActivity  {
        Button button_get_data_from_database = (Button) findViewById(R.id.button_read_SD);
        Button button_get_data_from_cisco = (Button) findViewById(R.id.button_read_cisco);
 
-       //инициализировали наш массив с edittext.aми
        allEds = new ArrayList<View>();
-
-       //находим наш linear который у нас под кнопкой add edittext в activity_main.xml
-
-
-        /*
-        addButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                createfield("00:11:22:33:44:55");
-            }
-        });
-*/
 
        button_get_data_from_database.setOnClickListener(new View.OnClickListener() {
            @Override
@@ -211,7 +177,6 @@ public class MainActivity  extends AppCompatActivity  {
                get_data_from_server(source);
            }
        });
-
    }
 
     private void get_test_data() {
@@ -227,88 +192,11 @@ public class MainActivity  extends AppCompatActivity  {
         unregisterReceiver(br);
     }
 
-
-    void writeFile() {
-        try {
-            Log.d(LOG_TAG, "writeFile");
-            // отрываем поток для записи
-            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(
-                    openFileOutput(FILENAME, MODE_PRIVATE)));
-            // пишем данные
-            bw.write(herddata);
-            // закрываем поток
-            bw.close();
-            Log.d(LOG_TAG, "Файл записан");
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    void readFile() {
-        try {
-            // открываем поток для чтения
-            BufferedReader br = new BufferedReader(new InputStreamReader(
-                    openFileInput(FILENAME)));
-            String str = "";
-            // читаем содержимое
-            //Log.d(LOG_TAG, "readFile");
-            while ((str = br.readLine()) != null) {
-                // Log.d(LOG_TAG, str);
-                Log.d(LOG_TAG, "read File: "+str);
-                parseline(str);
-            }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-    void readFileSD() {
-        // проверяем доступность SD
-        if (!Environment.getExternalStorageState().equals(
-                Environment.MEDIA_MOUNTED)) {
-            Log.d(LOG_TAG, "SD-карта не доступна: " + Environment.getExternalStorageState());
-            return;
-        }
-        // получаем путь к SD
-        File sdPath = Environment.getExternalStorageDirectory();
-        // добавляем свой каталог к пути
-        sdPath = new File(sdPath.getAbsolutePath() + "/" + DIR_SD);
-        //  формируем объект File, который содержит путь к файлу
-        Log.d(LOG_TAG, String.valueOf(sdPath));
-        File sdFile = new File(sdPath, FILENAME_SD);
-        try {
-            // открываем поток для чтения
-            Log.d(LOG_TAG, "==BufferedReader==");
-
-            BufferedReader br = new BufferedReader(new FileReader(sdFile));
-            String str = "";
-            // читаем содержимое
-            while ((str = br.readLine()) != null) {
-                Log.d(LOG_TAG, str);
-                herddata=herddata+str+"\n\r";
-            }
-            Log.d(LOG_TAG, herddata);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
     void get_data_from_server(String source){
-        //Toast.makeText(this, "Отслеживание переключения: " + (isChecked ? "on" : "off"), Toast.LENGTH_SHORT).show();
-
-        //String macaddresfromtextview = ((TextView)((View)(compoundButton.getParent())).findViewWithTag("id1")).getText().toString();
-        //Log.d(LOG_TAG, "======== if onCheckedChanged  =======: "+macaddresfromtextview);
-        //String command = isChecked ? "ON :" : "OFF:";
-        //String sending_command = command + macaddresfromtextview;
         String sending_command = "info";
         if(source.equals("database")){sending_command = "getdatafromdatabase";}
         if(source.equals("cisco")){sending_command = "info";}
-     //   ctx0 = (Context) MainActivity.this;
+
         Intent intent = new Intent();
         intent.setClass(MainActivity.this, TCPService.class);
         intent.putExtra("ipaddress", ipaddress_srv);
@@ -317,22 +205,6 @@ public class MainActivity  extends AppCompatActivity  {
         Log.d(LOG_TAG, "sending_command: "+sending_command);
         MainActivity.this.startService(intent);
     }
-
-    String[] parseline(String str){
-        String[] macaddroutput = new String[17]; //  ?????
-        // if (!inputMassage.matches("\\[(\\[\"-?\\d{10}\",\"-?\\d\\d?\\d?\\.\\d\",\"-?\\d\\d?\\d?\\.\\d\",\"-?\\d\\d?\\d?\\.\\d\",\"-?\\d\\d?\\d?\\.\\d\",\"-?\\d\\d?\\d?\\.\\d\",\"-?\\d\\d?\\d?\\.\\d\",\"-?\\d\\d?\\d?\\.\\d\",\"-?\\d\\d?\\d?\\.\\d\"\\],?)+\\]")) { }
-
-        if (str.matches("[0-9A-Fa-f]{2}[-:][0-9A-Fa-f]{2}[-:][0-9A-Fa-f]{2}[-:][0-9A-Fa-f]{2}[-:][0-9A-Fa-f]{2}[-:][0-9A-Fa-f]{2}.*")) {
-            Log.d(LOG_TAG, "input parseline Massage: "+ str);
-            macaddroutput[0] = str.substring(0, (0 + 17));
-            macaddroutput[1] = str.substring(18);
-         //   Log.d(LOG_TAG, "macaddroutput = "+macaddroutput);
-            createfield(macaddroutput);
-        }
-
-        return macaddroutput;
-    }
-
 
     void createfield(String[] textfield){
         final LinearLayout linear = (LinearLayout) findViewById(R.id.linear);
@@ -365,7 +237,6 @@ public class MainActivity  extends AppCompatActivity  {
 
         Button buttongo = (Button) view.findViewById(R.id.button_go);
         buttongo.setText(textfield[2]);
-
      //   registerForContextMenu(buttongo);
 
 
@@ -423,7 +294,7 @@ public class MainActivity  extends AppCompatActivity  {
             while (count < line.length){
                 String subline[] = line[count].split(":");
                 String subline2[] = new String[5];
-                Log.d(LOG_TAG, "subline_length = "+subline.length);
+            //    Log.d(LOG_TAG, "subline_length = "+subline.length);
 
                 clients[count][0] = subline2[0] = subline[0];
                 clients[count][1] = subline2[1] = subline[1];
@@ -433,9 +304,7 @@ public class MainActivity  extends AppCompatActivity  {
                 clients[count][3] = subline2[3];
                 clients[count][4] = subline2[4];
 
-            //    if(subline.length > 3) {clients[count][3] = subline[3];}else{clients[count][3] = "-";}
-            //    if(subline.length > 4) {clients[count][4] = subline[4];}else{clients[count][4] = "-";}
-                Log.d(LOG_TAG, clients[count][0]+"   "+clients[count][1]+"   "+clients[count][2]+"   "+clients[count][3]+"   "+clients[count][4]);
+            //    Log.d(LOG_TAG, clients[count][0]+"   "+clients[count][1]+"   "+clients[count][2]+"   "+clients[count][3]+"   "+clients[count][4]);
                 createfield(subline2);
                 count++;
             }
@@ -591,10 +460,6 @@ public class MainActivity  extends AppCompatActivity  {
                             wrongdata = true;
                             Log.d(LOG_TAG, "======= password Wrong! ========");
                         }
-
-                       // try {
-                       //     intport = Integer.parseInt(port);
-                       // } catch(NumberFormatException nfe) { }
 
                         if(!wrongdata){
                             editor.putString(IPADDRESSA, ipaddress_srv1);
