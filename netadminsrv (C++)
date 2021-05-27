@@ -1,5 +1,4 @@
-
-
+//26.05.2021
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/socket.h>
@@ -15,49 +14,53 @@
 #include <fstream>
 #include <iostream>
 #include <mysql.h>
-
-
+#include <regex>
 
 using namespace std;
 
 const char *usernamecis = "admin\r\n";
 const char *passwordcis = "passwordcisco\r\n";
+const char *passwordcis2 = "passwordcisco2\r\n";
 const char *passwordenablecis = "passwordenablecisco\r\n";
 const char *ipaddresscis = "192.168.1.1";
+const char *ipaddresscis2 = "192.168.1.2";
 
-    MYSQL *conn0;
-    MYSQL *conn;
-    MYSQL *conn2;
-    MYSQL_RES *res;
-    MYSQL_ROW rowsql;
+const char *server = "localhost";
+const char *user = "user";
+const char *password = "password";
+const char *database = "netadmin";
+const char *table = "netarp";
 
-      const char *server = "localhost";
-      const char *user = "user";
-      const char *password = "password";
-      const char *database = "netadmin";
-      const char *table = "netarp";
+MYSQL *conn0;
+MYSQL *conn;
+MYSQL *conn2;
+MYSQL_RES *res;
+MYSQL_ROW rowsql;
 
-    string answer;
-    string stranswer;
-    string findword;
-    string cmd;
-    string sqlquery0;
-    string sqlquery1;
-    string ip_address;
-    string age;
-    string mac_address;
-    string manufactur;
-    string name;
-    string newipaddr;
-    string newmacaddr;
-    string newage;
-    string newname;
 
-    decltype(answer.cbegin()) iter;
-    size_t position = 0;
-    int idcount;
-    int masslengh;
-    int strings_counter=0;
+string answer;
+string pinganswer;
+string stranswer;
+string findword;
+string cmd;
+string sqlquery0;
+string sqlquery1;
+string ip_address;
+string age;
+string mac_address;
+string manufactur;
+string name;
+string newipaddr;
+string newmacaddr;
+string newage;
+string newname;
+//string nullstr="";
+
+decltype(answer.cbegin()) iter;
+size_t position = 0;
+int idcount;
+int masslengh;
+int strings_counter=0;
 
 vector <string> list; //наш вектор с элементами
 int current_element; //номер текущего элемента
@@ -69,16 +72,22 @@ int row;
 bool windowsetting=false;
 bool windowsettingmem=false;
 string subipaddress, submacaddress, submanufactur, subname;
-  int ch = 0;
+int ch = 0;
 int screenmode;
 
 void get_arp_from_cisco();
+void sendcommand(string);
+void send_command_ping(string);
 void recognize_arp_table(string);
 void recognize_string_arp_table(string);
+void recognize_ping_answer(string);
 void sql_read_from_table_and_compare(string);
 void get_name_from_sql();
+void get_alldata_from_sql();
 void prepare_answer_for_sending();
 void clear_previos_window();
+string save_data_to_sql(string);
+
 int ncount=0;
 
 
@@ -176,6 +185,8 @@ void tcpdaemon::mainloop()
 
 void tcpdaemon::operate(int fd)
 {
+    smatch sm;
+
     char c;
     bool finished;
     string cmd, answer;
@@ -195,13 +206,75 @@ void tcpdaemon::operate(int fd)
 
     if(!finished && !cmd.empty())
     {
-        if(cmd == "info")
+//========================================= info =============================
+        if(cmd == "getdatafromdatabase")
         {
-//           answer = "--netadminserver work new!-- :)";
-           get_arp_from_cisco();
-//           answer = "0000000000000000";
+
+//    ofstream fout("/var/log/netadmin.log", ios_base::app);
+//    fout <<  "getdatafromdatabase";
+//    fout.close();
+
+
+           get_alldata_from_sql();
            prepare_answer_for_sending();
            answer = stranswer;
+           answer = answer+"\n\r";
+           write(fd, answer.c_str(), answer.size());
+
+        }
+//========================================= info =============================
+        if(cmd == "info")
+        {
+           get_arp_from_cisco();
+           prepare_answer_for_sending();
+           answer = stranswer;
+           answer = answer+"\n\r";
+           write(fd, answer.c_str(), answer.size());
+
+        }
+//===========================================================================
+        else if(regex_match(cmd, sm, regex("save:ipaddress=.*")))
+        {
+           answer=save_data_to_sql(cmd);
+        }
+//========================================= ON  =============================
+        else if(regex_match(cmd, sm, regex("on:macaddress=[0-9A-Fa-f]{4}\\.[0-9A-Fa-f]{4}\\.[0-9A-Fa-f]{4}$")))
+        {
+         answer = "no mac address static "+cmd.substr(14, 4)+"."+cmd.substr(19, 4)+"."+cmd.substr(24, 4)+" vlan ";
+          sendcommand(answer);
+          answer = answer+"\n\r";
+          write(fd, answer.c_str(), answer.size());
+
+//          answer = "ok";
+        }
+//========================================= OFF =============================
+        else if(regex_match(cmd, sm, regex("off:macaddress=[0-9A-Fa-f]{4}\\.[0-9A-Fa-f]{4}\\.[0-9A-Fa-f]{4}$")))
+        {
+         answer = "mac address static "+cmd.substr(15, 4)+"."+cmd.substr(20, 4)+"."+cmd.substr(25, 4)+" vlan ";
+          sendcommand(answer);
+          answer = answer+"\n\r";
+          write(fd, answer.c_str(), answer.size());
+
+//          answer = "ok";
+        }
+        else if(regex_match(cmd, sm, regex("full:ipaddress=([01]?[0-9]{1,2}|2[0-4][0-9]|25[0-5])\\.([01]?[0-9]{1,2}|2[0-4][0-9]|25[0-5])\\.([01]?[0-9]{1,2}|2[0-4][0-9]|25[0-5])\\.([01]?[0-9]{1,2}|2[0-4][0-9]|25[0-5])")))
+        {
+//           answer = "full";
+        }
+        else if(regex_match(cmd, sm, regex("low:ipaddress=([01]?[0-9]{1,2}|2[0-4][0-9]|25[0-5])\\.([01]?[0-9]{1,2}|2[0-4][0-9]|25[0-5])\\.([01]?[0-9]{1,2}|2[0-4][0-9]|25[0-5])\\.([01]?[0-9]{1,2}|2[0-4][0-9]|25[0-5])")))
+        {
+//           answer = "low";
+        }
+//========================================= ping =============================
+        else if(regex_match(cmd, sm, regex("ping:ipaddress=([01]?[0-9]{1,2}|2[0-4][0-9]|25[0-5])\\.([01]?[0-9]{1,2}|2[0-4][0-9]|25[0-5])\\.([01]?[0-9]{1,2}|2[0-4][0-9]|25[0-5])\\.([01]?[0-9]{1,2}|2[0-4][0-9]|25[0-5])")))
+        {
+
+           string command = cmd.substr(15);
+           send_command_ping(command);
+
+           answer = "pinganswer:" + pinganswer + "\n\r";
+           write(fd, answer.c_str(), answer.size());
+
         }
         else if(cmd == "version")
         {
@@ -215,15 +288,15 @@ void tcpdaemon::operate(int fd)
         }
         else
             {
-            answer = "--command not recognize--";
+            answer = "unknow command";
         }
     }
 
     if(!finished && !answer.empty())
     {
 //        answer = "answer_from_srv: "+answer+"\n\r";
-        answer = answer+"\n\r";
-        write(fd, answer.c_str(), answer.size());
+//        answer = answer+"\n\r";
+//        write(fd, answer.c_str(), answer.size());
     }
     }
 
@@ -252,19 +325,18 @@ void get_arp_from_cisco()
   int bytes;
   struct sockaddr_in sa;
   char buffer[BUFSIZ+1];
-//  cout << "begin" << endl;
-
+  string namedevice =  "3925-rtr";
 
   time_t time1 = time(0);
   time_t timermemory = time(0);
 
-  ofstream fout("/var/log/example.log", ios_base::app);
-  fout << "netadmin send command " << asctime(localtime(&time1));
-  fout.close();
+  ofstream fout("/var/log/netadmin.log", ios_base::app);
+//  fout << "netadmin send command " << asctime(localtime(&time1));
+//  fout.close();
 
   if ((s = socket(PF_INET, SOCK_STREAM, 0)) < 0) {
 
-    ofstream fout("/var/log/example.log", ios_base::app);
+//    fout("/var/log/netadmin.log", ios_base::app);
     fout << asctime(localtime(&time1)) << "error socket2";
     fout.close();
 
@@ -290,9 +362,8 @@ void get_arp_from_cisco()
     close(s);
   }
 
-//-------------------------------------------------------
 
-//-------------------------------------------------------
+//...................
 while(n == 0){
 //    cout << "0" << endl;
     read(s, &c, 1);
@@ -348,7 +419,7 @@ while(n == 4){
     read(s, &c, 1);
     answer += c;
 //    cout << answer << endl;
-    findword = "3925-rtr#";
+    findword = namedevice+"#";
     iter = search(answer.cbegin(), answer.cend(), findword.cbegin(), findword.cend());
     position = distance(answer.cbegin(), iter);
     if(position < answer.length()){//cout<<"===== Ok, founde " << findword << endl;
@@ -397,7 +468,7 @@ while(n == 8){
     read(s, &c, 1);
     answer += c;
 
-    findword = "3925-rtr#";
+    findword = namedevice+"#";
     iter = search(answer.cbegin(), answer.cend(), findword.cbegin(), findword.cend());
     position = distance(answer.cbegin(), iter);
     if(position < answer.length()){
@@ -421,7 +492,7 @@ while(n == 10){
     read(s, &c, 1);
     answer += c;
 
-    findword = "3925-rtr(config)#";
+    findword = namedevice+"(config)#";
     iter = search(answer.cbegin(), answer.cend(), findword.cbegin(), findword.cend());
     position = distance(answer.cbegin(), iter);
     if(position < answer.length()){
@@ -450,7 +521,7 @@ while(n == 12){
     read(s, &c, 1);
     answer += c;
 //    cout << answer << endl;
-    findword = "3925-rtr#";
+    findword = namedevice+"#";
     iter = search(answer.cbegin(), answer.cend(), findword.cbegin(), findword.cend());
     position = distance(answer.cbegin(), iter);
     if(position < answer.length()){
@@ -467,6 +538,11 @@ while(n == 12){
 while(n== 13){
 //    cout << "13" << endl;
     cmd="exit\r\n";
+
+//    ofstream fout("/var/log/netadmin.log", ios_base::app);
+//    fout << "netadmin get arp " << asctime(localtime(&time1));
+//    fout.close();
+
 //    write(s, cmd.c_str(), cmd.size());
 //    write(s, cmd.c_str(), cmd.size());
     write(s, cmd.c_str(), cmd.size());
@@ -478,6 +554,535 @@ while(n== 13){
 
 }
 //--------end void get_arp_from_cisco---------------------------------------------------
+
+
+//---------------------------------------------------------------------------
+void sendcommand(string command)
+//---------------------------------------------------------------------------
+{
+
+//  cout << "==== GO! ====";
+  string cmd, answer;
+  bool finished;
+  char c;
+  finished = false;
+  int n = 0;
+
+  int s;
+  int bytes;
+  struct sockaddr_in sa;
+  char buffer[BUFSIZ+1];
+  string namedevice =  "3560g-abk";
+
+  time_t time1 = time(0);
+  time_t timermemory = time(0);
+
+//  ofstream fout("/var/log/netadmin.log", ios_base::app);
+//  fout << "netadmin send command " << asctime(localtime(&time1));
+//  fout.close();
+
+  if ((s = socket(PF_INET, SOCK_STREAM, 0)) < 0) {
+
+    ofstream fout("/var/log/netadmin.log", ios_base::app);
+    fout << asctime(localtime(&time1)) << "error socket2";
+    fout.close();
+
+    perror("socket");
+//    return 1;
+  }
+
+  bzero(&sa, sizeof sa);
+  sa.sin_family = AF_INET;
+  sa.sin_port = htons(23);
+  sa.sin_addr.s_addr = inet_addr(ipaddresscis2);
+
+//  sa.sin_addr.s_addr = htonl((((((192 << 8) | 168) << 8) | 1) << 8) | 108);
+
+
+  if (connect(s, (struct sockaddr *)&sa, sizeof sa) < 0) {
+
+    ofstream fout("/var/log/netadmin.log", ios_base::app);
+    fout << asctime(localtime(&time1)) << "error connect2";
+    fout.close();
+
+    perror("connect");
+    close(s);
+  }
+
+
+//...................
+while(n == 0){
+//    cout << "0" << endl;
+    read(s, &c, 1);
+    answer += c;
+//    cout << answer << endl;
+    findword = "Username: ";
+    iter = search(answer.cbegin(), answer.cend(), findword.cbegin(), findword.cend());
+    position = distance(answer.cbegin(), iter);
+    if(position < answer.length()){ //cout<<"===== Ok, founde " << findword << endl;
+    answer = "";
+       n = 1;
+       break;
+       }
+    }
+//...................
+while(n==1){
+//    cout << "1" << endl;
+    answer = "";
+    cmd = usernamecis;
+    write(s, cmd.c_str(), cmd.size());
+    //cout << "send " << cmd << endl;
+    n = 2;
+    break;
+    }
+//...................
+while(n == 2){
+//    cout << "2" << endl;
+    read(s, &c, 1);
+    answer += c;
+//    cout << answer << endl;
+    findword = "Password: ";
+    iter = search(answer.cbegin(), answer.cend(), findword.cbegin(), findword.cend());
+    position = distance(answer.cbegin(), iter);
+    if(position < answer.length()){//cout<<"===== Ok, founde " << findword << endl;
+       answer = "";
+       n = 3;
+       break;
+       }
+    }
+//...................
+while(n==3){
+//    cout << "3" << endl;
+    answer = "";
+    cmd = passwordcis2;
+    write(s, cmd.c_str(), cmd.size());
+    //cout << "send " << cmd << endl;
+    n = 4;
+    break;
+    }
+//...................
+while(n == 4){
+//    cout << "4" << endl;
+    read(s, &c, 1);
+    answer += c;
+//    cout << answer << endl;
+    findword = namedevice+">";
+    iter = search(answer.cbegin(), answer.cend(), findword.cbegin(), findword.cend());
+    position = distance(answer.cbegin(), iter);
+    if(position < answer.length()){//cout<<"===== Ok, founde " << findword << endl;
+       answer = "";
+       n = 5;//old value 11
+       break;
+       }
+    }
+//...................
+while(n==5){
+//    cout << "5" << endl;
+    answer = "";
+    cmd = "enable\r\n";
+    write(s, cmd.c_str(), cmd.size());
+    //cout << "send " << cmd << endl;
+    n = 6;
+    break;
+    }
+//...................
+while(n == 6){
+//    cout << "6" << endl;
+    read(s, &c, 1);
+    answer += c;
+    findword = "Password: ";
+    iter = search(answer.cbegin(), answer.cend(), findword.cbegin(), findword.cend());
+    position = distance(answer.cbegin(), iter);
+    if(position < answer.length()){//cout<<"===== Ok, founde " << findword << endl;
+       answer = "";
+       n = 7;
+       break;
+       }
+    }
+    //...............
+while(n==7){
+//    cout << "7" << endl;
+    answer = "";
+    cmd = passwordenablecis;
+    write(s, cmd.c_str(), cmd.size());
+    //cout << "send " << cmd << endl;
+    n = 8;
+    break;
+    }
+//...................
+while(n == 8){
+//    cout << "8" << endl;
+    read(s, &c, 1);
+    answer += c;
+
+    findword = namedevice+"#";
+    iter = search(answer.cbegin(), answer.cend(), findword.cbegin(), findword.cend());
+    position = distance(answer.cbegin(), iter);
+    if(position < answer.length()){
+       //cout<<"===== Ok, founde " << findword << endl;
+       answer = "";
+       n = 9;
+       break;
+       }
+    }
+//...................
+while(n== 9){
+//    cout << "9" << endl;
+    cmd="conf t\r\n";
+    write(s, cmd.c_str(), cmd.size());
+    //cout << "send " << cmd << endl;
+    n = 10;
+    }
+//...................
+while(n == 10){
+//    cout << "10" << endl;
+    read(s, &c, 1);
+    answer += c;
+
+    findword = namedevice+"(config)#";
+    iter = search(answer.cbegin(), answer.cend(), findword.cbegin(), findword.cend());
+    position = distance(answer.cbegin(), iter);
+    if(position < answer.length()){
+       //cout<<"===== Ok, founde " << findword << endl;
+       answer = "";
+       n = 11;
+       break;
+       }
+    }
+//...................
+
+while(n== 11){
+//    cout << "11" << endl;
+//    command = "mac address static 0016.E8B7.7833 vlan 812 drop";
+//--    command = "sh arp";
+    cmd=command+"810 drop\r\n";
+    write(s, cmd.c_str(), cmd.size());
+//    cmd=command+"812 drop\r\n";
+//    write(s, cmd.c_str(), cmd.size());
+    //cout << "send: " << cmd << endl;
+    answer="";
+
+    n = 12;
+    }
+//...................
+while(n == 12){
+//    cout << "12" << endl;
+    read(s, &c, 1);
+    answer += c;
+//    cout << answer << endl;
+    findword = namedevice+"(config)#";
+    iter = search(answer.cbegin(), answer.cend(), findword.cbegin(), findword.cend());
+    position = distance(answer.cbegin(), iter);
+    if(position < answer.length()){
+//       cout<<"===== Ok, founde " << findword << endl;
+//       cout<<answer<<endl;
+//       recognize_string_arp_table(answer);
+       answer = "";
+       n = 13;
+       break;
+       }
+    }
+//...................
+
+while(n== 13){
+//    cout << "11" << endl;
+//    command = "mac address static 0016.E8B7.7833 vlan 812 drop";
+//--    command = "sh arp";
+//    cmd=command+"810 drop\r\n";
+//    write(s, cmd.c_str(), cmd.size());
+    cmd=command+"812 drop\r\n";
+    write(s, cmd.c_str(), cmd.size());
+    //cout << "send: " << cmd << endl;
+    answer="";
+
+    n = 14;
+    }
+//...................
+while(n == 14){
+//    cout << "12" << endl;
+    read(s, &c, 1);
+    answer += c;
+//    cout << answer << endl;
+    findword = namedevice+"(config)#";
+    iter = search(answer.cbegin(), answer.cend(), findword.cbegin(), findword.cend());
+    position = distance(answer.cbegin(), iter);
+    if(position < answer.length()){
+//       cout<<"===== Ok, founde " << findword << endl;
+//       cout<<answer<<endl;
+//       recognize_string_arp_table(answer);
+       answer = "";
+       n = 15;
+       break;
+       }
+    }
+//...................
+
+while(n== 15){
+//    cout << "13" << endl;
+    cmd="exit\r\n";
+
+    ofstream fout("/var/log/netadmin.log", ios_base::app);
+    fout << "netadmin send string end " << asctime(localtime(&time1));
+    fout.close();
+
+    write(s, cmd.c_str(), cmd.size());
+    write(s, cmd.c_str(), cmd.size());
+    write(s, cmd.c_str(), cmd.size());
+    //cout << "send " << cmd << endl;
+    n = 0;
+    close(s);
+    }
+//...................
+
+}
+//--------end void send command---------------------------------------------------
+
+
+//--------------------------------------------------------------------------------------
+void send_command_ping(string command){
+
+  string cmd, answer;
+  bool finished;
+  char c;
+  finished = false;
+  int n = 0;
+
+  int s;
+  int bytes;
+  struct sockaddr_in sa;
+  char buffer[BUFSIZ+1];
+  string namedevice =  "3925-rtr";
+
+  time_t time1 = time(0);
+  time_t timermemory = time(0);
+
+  ofstream fout("/var/log/netadmin.log", ios_base::app);
+  fout << "netadmin send ping command " << asctime(localtime(&time1));
+  fout.close();
+
+  if ((s = socket(PF_INET, SOCK_STREAM, 0)) < 0) {
+
+    ofstream fout("/var/log/netadmin.log", ios_base::app);
+    fout << asctime(localtime(&time1)) << "error socket2";
+    fout.close();
+
+    perror("socket");
+
+  }
+
+  bzero(&sa, sizeof sa);
+  sa.sin_family = AF_INET;
+  sa.sin_port = htons(23);
+  sa.sin_addr.s_addr = inet_addr(ipaddresscis);
+//  sa.sin_addr.s_addr = htonl((((((192 << 8) | 168) << 8) | 1) << 8) | 108);
+
+  if (connect(s, (struct sockaddr *)&sa, sizeof sa) < 0) {
+
+    ofstream fout("/var/log/netadmin.log", ios_base::app);
+    fout << asctime(localtime(&time1)) << "error connect2";
+    fout.close();
+
+    perror("connect");
+    close(s);
+  }
+
+
+//...................
+while(n == 0){
+//    cout << "0" << endl;
+    read(s, &c, 1);
+    answer += c;
+//    cout << answer << endl;
+    findword = "Username: ";
+    iter = search(answer.cbegin(), answer.cend(), findword.cbegin(), findword.cend());
+    position = distance(answer.cbegin(), iter);
+    if(position < answer.length()){ //cout<<"===== Ok, founde " << findword << endl;
+    answer = "";
+       n = 1;
+       break;
+       }
+    }
+//...................
+while(n==1){
+//    cout << "1" << endl;
+    answer = "";
+    cmd = usernamecis;
+    write(s, cmd.c_str(), cmd.size());
+    //cout << "send " << cmd << endl;
+    n = 2;
+    break;
+    }
+//...................
+while(n == 2){
+//    cout << "2" << endl;
+    read(s, &c, 1);
+    answer += c;
+//    cout << answer << endl;
+    findword = "Password: ";
+    iter = search(answer.cbegin(), answer.cend(), findword.cbegin(), findword.cend());
+    position = distance(answer.cbegin(), iter);
+    if(position < answer.length()){//cout<<"===== Ok, founde " << findword << endl;
+       answer = "";
+       n = 3;
+       break;
+       }
+    }
+//...................
+while(n==3){
+//    cout << "3" << endl;
+    answer = "";
+    cmd = passwordcis;
+    write(s, cmd.c_str(), cmd.size());
+    //cout << "send " << cmd << endl;
+    n = 4;
+    break;
+    }
+//...................
+while(n == 4){
+//    cout << "4" << endl;
+    read(s, &c, 1);
+    answer += c;
+//    cout << answer << endl;
+    findword = namedevice+"#";
+    iter = search(answer.cbegin(), answer.cend(), findword.cbegin(), findword.cend());
+    position = distance(answer.cbegin(), iter);
+    if(position < answer.length()){//cout<<"===== Ok, founde " << findword << endl;
+       answer = "";
+       n = 11;//old value 5
+       break;
+       }
+    }
+//...................
+while(n==5){
+//    cout << "5" << endl;
+    answer = "";
+    cmd = "enable\r\n";
+    write(s, cmd.c_str(), cmd.size());
+    //cout << "send " << cmd << endl;
+    n = 6;
+    break;
+    }
+//...................
+while(n == 6){
+//    cout << "6" << endl;
+    read(s, &c, 1);
+    answer += c;
+    findword = "Password: ";
+    iter = search(answer.cbegin(), answer.cend(), findword.cbegin(), findword.cend());
+    position = distance(answer.cbegin(), iter);
+    if(position < answer.length()){//cout<<"===== Ok, founde " << findword << endl;
+       answer = "";
+       n = 7;
+       break;
+       }
+    }
+    //...............
+while(n==7){
+//    cout << "7" << endl;
+    answer = "";
+    cmd = passwordenablecis;
+    write(s, cmd.c_str(), cmd.size());
+    //cout << "send " << cmd << endl;
+    n = 8;
+    break;
+    }
+//...................
+while(n == 8){
+//    cout << "8" << endl;
+    read(s, &c, 1);
+    answer += c;
+
+    findword = namedevice+"#";
+    iter = search(answer.cbegin(), answer.cend(), findword.cbegin(), findword.cend());
+    position = distance(answer.cbegin(), iter);
+    if(position < answer.length()){
+       //cout<<"===== Ok, founde " << findword << endl;
+       answer = "";
+       n = 9;
+       break;
+       }
+    }
+//...................
+while(n== 9){
+//    cout << "9" << endl;
+    cmd="conf t\r\n";
+    write(s, cmd.c_str(), cmd.size());
+    //cout << "send " << cmd << endl;
+    n = 10;
+    }
+//...................
+while(n == 10){
+//    cout << "10" << endl;
+    read(s, &c, 1);
+    answer += c;
+
+    findword = namedevice+"(config)#";
+    iter = search(answer.cbegin(), answer.cend(), findword.cbegin(), findword.cend());
+    position = distance(answer.cbegin(), iter);
+    if(position < answer.length()){
+       //cout<<"===== Ok, founde " << findword << endl;
+       answer = "";
+       n = 11;
+       break;
+       }
+    }
+//...................
+
+while(n== 11){
+//    cout << "11" << endl;
+//    command = "mac address static 0016.E8B7.7833 vlan 812 drop";
+
+    cmd="ping "+command+"\r\n";
+    write(s, cmd.c_str(), cmd.size());
+    //cout << "send: " << cmd << endl;
+    answer="";
+
+    n = 12;
+    }
+//...................
+while(n == 12){
+//    cout << "12" << endl;
+    read(s, &c, 1);
+    answer += c;
+//    cout << answer << endl;
+    findword = namedevice+"#";
+    iter = search(answer.cbegin(), answer.cend(), findword.cbegin(), findword.cend());
+    position = distance(answer.cbegin(), iter);
+    if(position < answer.length()){
+//       cout<<"===== Ok, founde " << findword << endl;
+//       cout<<answer<<endl;
+       recognize_ping_answer(answer);
+//       answer = "";
+       n = 13;
+       
+//    ofstream fout("/var/log/netadmin.log", ios_base::app);
+//    fout << "ping answer: " << answer << "\r\n-------------------------------\r\n" << + asctime(localtime(&time1));
+//    fout.close();
+
+    //pinganswer = answer;
+       break;
+       }
+    }
+//...................
+
+while(n== 13){
+//    cout << "13" << endl;
+    cmd="exit\r\n";
+
+//    ofstream fout("/var/log/netadmin.log", ios_base::app);
+//    fout << "netadmin get arp " << asctime(localtime(&time1));
+//    fout.close();
+
+//    write(s, cmd.c_str(), cmd.size());
+//    write(s, cmd.c_str(), cmd.size());
+    write(s, cmd.c_str(), cmd.size());
+    //cout << "send " << cmd << endl;
+    n = 0;
+    close(s);
+    }
+//...................
+
+}
 
 //--------------------------------------------------------------------------------------
 
@@ -507,9 +1112,16 @@ void recognize_string_arp_table(string arptable){
 
        recognize_arp_table(tmp);
 
+    //   if(mac_address=="Incomplete"){mac_address="----.----.----";}
+    //   if(age==""){age="-";}
+
        clientproperty[strings_counter][0]=ip_address;
        clientproperty[strings_counter][1]=mac_address;
        clientproperty[strings_counter][2]=age;
+    //   if(clientproperty[strings_counter][0]==nullstr){clientproperty[strings_counter][0]="-";}
+    //   if(clientproperty[strings_counter][1]==nullstr){clientproperty[strings_counter][1]="-";}
+    //   if(clientproperty[strings_counter][2]==nullstr){clientproperty[strings_counter][2]="-";}
+
 
        get_name_from_sql();
 
@@ -540,6 +1152,11 @@ void recognize_arp_table(string str){
     size_t delta = delim.length();
 
   int count = 0;
+//  ip_address="-";
+//  age="-";
+//  mac_address="-";
+  
+  
   while( ( next = str.find(delim, prev) ) != string::npos ){
 
     //-------------------Отладка-start
@@ -561,6 +1178,28 @@ void recognize_arp_table(string str){
 }
 
 //----------------------------------------------------
+void recognize_ping_answer(string inputpinganswer){
+
+//    string namedevice =  "3925-rtr";
+
+//    ofstream fout("/var/log/netadmin.log", ios_base::app);
+//    fout << "inputpinganswer: " << inputpinganswer << "\r\n+++++++++++++++++++++++++++++++\r\n";
+//    fout.close();
+int index;
+string dummystring,success,timing;
+
+index = inputpinganswer.find("percent")+8;
+dummystring = inputpinganswer.substr(index);
+success = dummystring.substr(0, 5);
+index = dummystring.find("max")+6;
+timing = dummystring.substr(index);
+index = timing.find_first_of(" ms");
+timing = timing.substr(0,index);
+
+pinganswer = success + "  " + timing;
+
+}
+//----------------------------------------------------
 void get_name_from_sql(){
 
 sqlquery0="SELECT `manufactur`, `name` FROM `mac_name` WHERE `macaddress` = '"+mac_address+"' AND '"+mac_address+"' <> 'Incomplete'";
@@ -572,23 +1211,156 @@ if (mysql_query(conn,sqlquery0.c_str() )){
 } else {
 res = mysql_use_result(conn);
 
+  string nullstr="";
   while((rowsql = mysql_fetch_row(res))){
             clientproperty[strings_counter][3]=rowsql[0];
             clientproperty[strings_counter][4]=rowsql[1];
-      }
+        //    clientproperty[strings_counter][3]="+-";
+        //    clientproperty[strings_counter][4]="+-";
+            if(rowsql[0]==nullstr){clientproperty[strings_counter][3]="-";}
+            if(rowsql[1]==nullstr){clientproperty[strings_counter][4]="-";}
+            }
    }
+}
+
+//----------------------------------------------------
+void get_alldata_from_sql(){
+
+strings_counter=0;
+string out,out1,out2,out3;
+//   ofstream fout("/var/log/netadmin.log", ios_base::app);
+
+    conn = mysql_init(NULL);
+
+    if (!mysql_real_connect(conn, server,user, password, database, 0, NULL, 0)) {
+       fprintf(stderr, "%s\n", mysql_error(conn));
+       exit(1);
+      }
+
+
+//sqlquery0="SELECT `ipaddress`, `macaddress`,  `manufactur`, `name` FROM `mac_name` ORDER BY `ipaddress` DESC LIMIT 1";
+sqlquery0="SELECT * FROM `mac_name` ORDER BY `ipaddress`";
+
+if (mysql_query(conn,sqlquery0.c_str() )){
+  fprintf(stderr, "%s\n", mysql_error(conn));
+  cout << "=== error !!! ===" << endl;
+  exit(1);
+} else {
+       //-----
+           res = mysql_use_result(conn);
+           string nullstr="";
+           while((rowsql = mysql_fetch_row(res))){
+
+               clientproperty[strings_counter][0]=rowsql[1];
+               clientproperty[strings_counter][1]=rowsql[2];
+               clientproperty[strings_counter][2]="-";
+               clientproperty[strings_counter][3]=rowsql[3];
+               clientproperty[strings_counter][4]=rowsql[4];
+
+        if(rowsql[0]==nullstr){clientproperty[strings_counter][0]="-";}
+        if(rowsql[1]==nullstr){clientproperty[strings_counter][1]="-";}
+        if(rowsql[2]==nullstr){clientproperty[strings_counter][2]="-";}
+        if(rowsql[3]==nullstr){clientproperty[strings_counter][3]="-";}
+        if(rowsql[4]==nullstr){clientproperty[strings_counter][4]="-";}
+
+//               out  = rowsql[1];
+//               out1 = rowsql[2];
+//               out2 = rowsql[3];
+//               out3 = rowsql[4];
+      strings_counter++;
+      }
+      //-----
+   }
+//   ofstream fout("/var/log/netadmin.log", ios_base::app);
+//   fout << out+" -  "+  out1+" -  "+  out2+" -  "+  out3 << endl;
+//   fout.close();
+mysql_close(conn);
+
 }
 
 //----------------------------------------------------
 void prepare_answer_for_sending(){
     int str_counter = 0;
+//    int strings_counter=30;
     answer = "{";
     while (strings_counter > str_counter){
-    answer = answer+"{"+clientproperty[str_counter][0]+":"+clientproperty[str_counter][1]+":"+clientproperty[str_counter][2]+":"+clientproperty[str_counter][3]+":"+clientproperty[str_counter][4]+":"+clientproperty[str_counter][5]+"}";
+//    answer = answer+"{"+clientproperty[str_counter][0]+":"+clientproperty[str_counter][1]+":"+clientproperty[str_counter][2]+":"+clientproperty[str_counter][3]+" :"+clientproperty[str_counter][4]+" }";
+    answer = answer+"{"+clientproperty[str_counter][0]+":"+clientproperty[str_counter][1]+":"+clientproperty[str_counter][2]+":"+clientproperty[str_counter][3]+":"+clientproperty[str_counter][4]+"}";
     str_counter++;
     }
     stranswer = answer+"}";
+
+//   ofstream fout("/var/log/netadmin.log", ios_base::app);
+//   fout << stranswer;
+//   fout.close();
+
 }
+
+//----------------------------------------------------
+//----------------------------------------------------
+string save_data_to_sql(string inputstring){
+
+int index0, index1;
+string sqlquery,outputstring,dummystring,subipaddress,submacaddress,subfactory,subname;
+
+index0 = inputstring.find("ipaddress=")+10;
+dummystring = inputstring.substr(index0);
+
+index1 = dummystring.find_first_of(",");
+subipaddress = dummystring.erase(index1);
+
+index0 = inputstring.find("macaddress=")+11;
+dummystring = inputstring.substr(index0);
+
+index1 = dummystring.find_first_of(",");
+submacaddress = dummystring.erase(index1);
+
+index0 = inputstring.find("factory=")+8;
+dummystring = inputstring.substr(index0);
+
+index1 = dummystring.find_first_of(",");
+submanufactur = dummystring.erase(index1);
+
+index0 = inputstring.find("name=")+5;
+subname = inputstring.substr(index0);
+
+
+conn = mysql_init(NULL);
+
+if (!mysql_real_connect(conn, server,user, password, database, 0, NULL, 0)) {
+   fprintf(stderr, "%s\n", mysql_error(conn));
+   exit(1);
+  }
+
+sqlquery = "SELECT `macaddress` FROM `mac_name` WHERE `macaddress` = '"+submacaddress+"'";
+    if (mysql_query(conn,sqlquery.c_str() )){
+          fprintf(stderr, "%s\n", mysql_error(conn));
+          cout << "=== error insert data!!! ===" << endl;
+          exit(1);
+       }else{
+            sqlquery = "INSERT INTO `mac_name` (`ipaddress`, `macaddress`, `manufactur`, `name`) VALUES ('"+subipaddress+"', '"+submacaddress+"', '"+submanufactur+"', '"+subname+"')";
+            res = mysql_use_result(conn);
+            while((rowsql = mysql_fetch_row(res))){
+                if(rowsql[0]) {
+                sqlquery="UPDATE `mac_name` SET `name`= '"+subname+"', `manufactur`= '"+submanufactur+"'  WHERE `macaddress` = '"+submacaddress+"'";
+                }else{
+                     }
+                }
+           }
+
+if (mysql_query(conn,sqlquery.c_str() )){
+  fprintf(stderr, "%s\n", mysql_error(conn));
+  cout << "=== error UPDATE!!! ===" << endl;
+  exit(1);
+}
+
+outputstring="answer="+subipaddress+"  "+submacaddress+"   "+submanufactur+"   "+subname;
+
+mysql_close(conn);
+
+return outputstring;
+}
+
 
 
 //=============================================================
