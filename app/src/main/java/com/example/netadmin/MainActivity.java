@@ -141,6 +141,7 @@ public class MainActivity  extends AppCompatActivity  {
 
        Button button_get_data_from_database = findViewById(R.id.button_read_SD);
        Button button_get_data_from_cisco = findViewById(R.id.button_read_cisco);
+       Button button_button_sec = findViewById(R.id.button_sec);
 
        allEds = new ArrayList<>();
 
@@ -181,6 +182,21 @@ public class MainActivity  extends AppCompatActivity  {
                get_data_from_server(source);
            }
        });
+
+        button_button_sec.setOnClickListener(new View.OnClickListener() {
+           @Override
+           public void onClick(View view) {
+               Vibrator vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
+               vibrator.vibrate(70);
+               allEds.clear();
+               final LinearLayout linear = findViewById(R.id.linear);
+               linear.removeAllViews();
+               String source = "SEC";
+               get_SEC_data_from_server(source);
+           }
+       });
+
+
    }
 
     private void get_test_data() {
@@ -203,6 +219,20 @@ public class MainActivity  extends AppCompatActivity  {
 
         Intent intent = new Intent();
         intent.setClass(MainActivity.this, TCPService.class);
+        intent.putExtra("ipaddress", ipaddress_srv);
+        intent.putExtra("port", intport_srv);
+        intent.putExtra("command", sending_command);
+        Log.d(LOG_TAG, "sending_command: "+sending_command);
+        MainActivity.this.startService(intent);
+    }
+
+    void get_SEC_data_from_server(String source){
+        String sending_command = "info";
+        if(source.equals("database")){sending_command = "getdatafromdatabase";}
+        if(source.equals("cisco")){sending_command = "info";}
+
+        Intent intent = new Intent();
+        intent.setClass(MainActivity.this, TCPServiceSec.class);
         intent.putExtra("ipaddress", ipaddress_srv);
         intent.putExtra("port", intport_srv);
         intent.putExtra("command", sending_command);

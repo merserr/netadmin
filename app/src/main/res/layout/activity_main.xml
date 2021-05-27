@@ -42,21 +42,29 @@
 
         <Button
             android:id="@+id/button_read_SD"
-            android:layout_width="180dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/database"
-            app:layout_constraintStart_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent" />
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="parent" />
 
         <Button
             android:id="@+id/button_read_cisco"
-            android:layout_width="180dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/cisco"
-            app:layout_constraintStart_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent" />
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="parent" />
         />
 
+        <Button
+            android:id="@+id/button_sec"
+            android:layout_width="180dp"
+            android:layout_height="wrap_content"
+            android:text="SEC"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="parent" />
+        />
     </LinearLayout>
 
 </RelativeLayout>

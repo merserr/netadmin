@@ -23,6 +23,7 @@
             </intent-filter>
         </activity>
         <service android:name="TCPService" />
+        <service android:name="TCPServiceSec" />
         <activity
             android:name=".Control_panel"
             android:label="@string/title_activity_Control_panel" />
